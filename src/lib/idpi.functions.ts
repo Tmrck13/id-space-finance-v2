@@ -101,7 +101,9 @@ export const getAppContent = createServerFn({ method: "GET" }).handler(async () 
 
 /* ---------------- Admin ---------------- */
 
-async function assertAdmin(supabase: { rpc: (fn: "is_admin") => Promise<{ data: unknown }> }) {
+async function assertAdmin(supabase: {
+  rpc: (fn: "is_admin") => PromiseLike<{ data: unknown }>;
+}) {
   const { data } = await supabase.rpc("is_admin");
   if (data !== true) throw new Error("Forbidden");
 }
