@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { MenuDrawer, SettingsDialog } from "@/components/idspace/menu-drawer";
 import { useSettings, useTap } from "@/lib/app-settings";
 import { PiAuthWidget } from "@/components/idspace/pi-auth-widget";
+import { useNotifications } from "@/lib/notification-store";
 
 /* ---------- Living background (client-only stars to avoid SSR mismatch) ---------- */
 export function LivingBackground() {
@@ -112,13 +113,15 @@ const NAV: Array<{ icon: typeof Home; label: string; to?: string }> = [
   { icon: Crown, label: "Premium", to: "/premium" },
   { icon: LineChartIcon, label: "Community", to: "/community" },
   { icon: Gift, label: "Rewards", to: "/checkin" },
+  { icon: Bell, label: "Alerts", to: "/notifications" },
   { icon: Target, label: "Missions" },
   { icon: Ship, label: "Hangar" },
-  { icon: User, label: "Profile" },
+  { icon: User, label: "Profile", to: "/profile" },
   { icon: Settings, label: "Settings" },
 ];
 
 export function Sidebar({ active }: { active: string }) {
+  const { unreadCount } = useNotifications();
   return (
     <aside className="hidden lg:flex sticky top-0 h-screen w-64 shrink-0 flex-col gap-4 p-4"
       style={{ background: "linear-gradient(180deg, rgba(11,26,18,.9), rgba(5,8,6,.95))",
@@ -145,13 +148,21 @@ export function Sidebar({ active }: { active: string }) {
       <nav className="flex flex-col gap-1">
         {NAV.map(({ icon: Icon, label, to }) => {
           const isActive = active === label;
+          const isAlerts = label === "Alerts";
           const cls = `group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition ${
             isActive ? "gold-border text-white" : "text-emerald-100/70 hover:text-white hover:bg-emerald-900/20"
           }`;
           const style = isActive ? { background: "linear-gradient(90deg, rgba(86,255,118,.15), rgba(255,215,106,.05))" } : undefined;
           const inner = (
             <>
-              <Icon className="h-4.5 w-4.5" style={{ color: isActive ? "#FFD76A" : "#56FF76" }} size={18}/>
+              <span className="relative">
+                <Icon className="h-4.5 w-4.5" style={{ color: isActive ? "#FFD76A" : "#56FF76" }} size={18}/>
+                {isAlerts && unreadCount > 0 && (
+                  <span className="absolute -right-2 -top-2 grid h-4 w-4 place-items-center rounded-full bg-red-500 text-[9px] text-white">
+                    {unreadCount > 9 ? "9+" : unreadCount}
+                  </span>
+                )}
+              </span>
               <span>{label}</span>
             </>
           );
@@ -165,7 +176,7 @@ export function Sidebar({ active }: { active: string }) {
       <div className="mt-auto flex flex-col items-center gap-1 pb-2 opacity-80">
         <Sparkles className="h-10 w-10" style={{ color: "#C7A650" }}/>
         <div className="text-sm font-display tracking-[.35em] gold-shimmer">ID·SPACE</div>
-        <div className="text-[10px] text-emerald-200/50">Ver. 1.0.0</div>
+        <div className="text-[10px] text-emerald-200/50">Ver. 2.0.0</div>
       </div>
     </aside>
   );
@@ -193,18 +204,24 @@ export function Header() {
 
 function HeaderActions() {
   const tap = useTap();
-  const { t } = useSettings();
+  const { unreadCount } = useNotifications();
   return (
     <div className="flex items-center gap-2">
-      <button
-        onClick={() => { tap(); toast(t("toast.notifications")); }}
-        className="grid h-10 w-10 place-items-center rounded-full glass-card transition active:scale-95 hover:-translate-y-0.5"
+      <Link
+        to="/notifications"
+        onClick={tap}
+        className="relative grid h-10 w-10 place-items-center rounded-full glass-card transition active:scale-95 hover:-translate-y-0.5"
         aria-label="Notifications"
       >
         <Bell className="h-4 w-4" style={{color:"#FFD76A"}}/>
-      </button>
+        {unreadCount > 0 && (
+          <span className="absolute -right-1 -top-1 grid h-4 w-4 place-items-center rounded-full bg-red-500 text-[9px] font-bold text-white">
+            {unreadCount > 9 ? "9+" : unreadCount}
+          </span>
+        )}
+      </Link>
       <button
-        onClick={() => { tap(); toast(t("toast.comingSoon")); }}
+        onClick={() => { tap(); toast("QR scanner coming soon"); }}
         className="grid h-10 w-10 place-items-center rounded-full glass-card transition active:scale-95 hover:-translate-y-0.5"
         aria-label="Scan"
       >
@@ -216,35 +233,39 @@ function HeaderActions() {
 }
 
 /* ---------- Bottom nav ---------- */
-type NavItem = { key: string; icon: ReactNode; labelKey: string; to?: string; badge?: number; action?: "menu" | "alerts" | "assets" };
+type NavItem = { key: string; icon: ReactNode; labelKey: string; to?: string; badge?: number | null; action?: "menu" | "alerts" | "assets" };
 
 function BottomNav({
   active, onOpenMenu,
 }: { active: string; onOpenMenu: () => void }) {
   const { t } = useSettings();
   const tap = useTap();
+  const { unreadCount } = useNotifications();
+
   const items: (NavItem | { mid: true })[] = [
     { key: "Home", icon: <Home className="h-4 w-4"/>, labelKey: "nav.home", to: "/" },
     { key: "Marketplace", icon: <Store className="h-4 w-4"/>, labelKey: "nav.market", to: "/marketplace" },
     { key: "Entertainment", icon: <PlayCircle className="h-4 w-4"/>, labelKey: "nav.play", to: "/entertainment" },
     { mid: true },
-    { key: "Assets", icon: <Wallet className="h-4 w-4"/>, labelKey: "nav.assets", action: "assets" },
-    { key: "Alerts", icon: <Bell className="h-4 w-4"/>, labelKey: "nav.alerts", badge: 3, action: "alerts" },
+    { key: "Assets", icon: <Wallet className="h-4 w-4"/>, labelKey: "nav.assets", to: "/wallet" },
+    { key: "Alerts", icon: <Bell className="h-4 w-4"/>, labelKey: "nav.alerts", badge: unreadCount || null, to: "/notifications" },
     { key: "Menu", icon: <Menu className="h-4 w-4"/>, labelKey: "nav.menu", action: "menu" },
   ];
+
   return (
     <nav className="sticky bottom-0 z-20 mt-4 glass-card mx-4 lg:mx-6 mb-3">
       <div className="relative grid grid-cols-7 items-end px-2 py-2">
         {items.map((it) => "mid" in it ? (
           <div key="mid" className="flex justify-center">
-            <button
-              onClick={() => { tap(); toast(t("toast.comingSoon")); }}
+            <Link
+              to="/swap"
+              onClick={tap}
               className="relative -mt-8 grid h-16 w-16 place-items-center rounded-full anim-pulse-glow transition active:scale-95"
               style={{ background:"radial-gradient(circle, #FFD76A, #6b4a10)", border:"2px solid #FFD76A" }}
-              aria-label="Pi"
+              aria-label="Swap"
             >
               <span className="text-2xl font-bold text-black">π</span>
-            </button>
+            </Link>
           </div>
         ) : (() => {
           const isActive = active === it.key;
@@ -252,7 +273,11 @@ function BottomNav({
             <>
               <span className="relative">
                 {it.icon}
-                {it.badge ? <span className="absolute -right-2 -top-2 grid h-4 w-4 place-items-center rounded-full bg-red-500 text-[9px] text-white">{it.badge}</span> : null}
+                {it.badge ? (
+                  <span className="absolute -right-2 -top-2 grid h-4 w-4 place-items-center rounded-full bg-red-500 text-[9px] text-white">
+                    {it.badge > 9 ? "9+" : it.badge}
+                  </span>
+                ) : null}
               </span>
               {t(it.labelKey)}
             </>
@@ -262,8 +287,6 @@ function BottomNav({
           const handle = () => {
             tap();
             if (it.action === "menu") onOpenMenu();
-            else if (it.action === "alerts") toast(t("toast.notifications"));
-            else if (it.action === "assets") toast(t("toast.comingSoon"));
           };
           return it.to ? (
             <Link key={it.key} to={it.to} onClick={tap} className={cls} style={style}>{inner}</Link>
@@ -285,6 +308,8 @@ function Footer() {
         <Link to="/privacy" className="transition hover:text-emerald-100 hover:underline">Privacy Policy</Link>
         <span>•</span>
         <Link to="/terms" className="transition hover:text-emerald-100 hover:underline">Terms of Service</Link>
+        <span>•</span>
+        <Link to="/profile" className="transition hover:text-emerald-100 hover:underline">Profile</Link>
       </div>
       <p>{t("footer.copy")}</p>
     </footer>

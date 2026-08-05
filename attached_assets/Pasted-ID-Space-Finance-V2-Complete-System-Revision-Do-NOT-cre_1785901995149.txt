@@ -1,0 +1,453 @@
+ID-Space Finance V2 — Complete System Revision
+
+Do NOT create a new project.
+
+Continue developing the existing React + Vite application.
+
+Maintain the current Islamic Green + Gold UI/UX and responsive mobile-first design.
+
+---
+
+1. Fix Vite Host Error
+
+Fix the Replit Vite host issue.
+
+Current error:
+
+Blocked request.
+This host is not allowed.
+
+Configure Vite so Replit domains are allowed.
+
+---
+
+2. Fix Every Existing Bug
+
+Review the entire application.
+
+Inspect every page.
+
+Inspect every menu.
+
+Inspect every button.
+
+Inspect every dialog.
+
+Inspect every API call.
+
+Inspect every state management.
+
+Inspect every database interaction.
+
+Repair all bugs found.
+
+Remove duplicate logic.
+
+Remove broken navigation.
+
+Remove console errors.
+
+Remove runtime errors.
+
+Optimize performance.
+
+---
+
+3. Notification System
+
+Fix notification badge.
+
+Current bug:
+Badge displays "3" although there are no unread notifications.
+
+Requirements:
+
+- Show badge only when unread notifications > 0.
+- Hide badge when unread = 0.
+- Notifications must come only from Admin/System.
+- Mark as Read updates instantly.
+- Sync automatically.
+
+---
+
+4. Deposit Security
+
+Current bug:
+
+Users can obtain IDPoints without making payment.
+
+Fix completely.
+
+New flow:
+
+Deposit
+
+↓
+
+Create Pending Transaction
+
+↓
+
+Waiting Payment
+
+↓
+
+Payment Verification
+
+↓
+
+Success
+
+↓
+
+Update Wallet
+
+↓
+
+Update Balance
+
+↓
+
+Update IDPoints
+
+↓
+
+Update Transaction History
+
+Pending transactions must never increase balances.
+
+---
+
+5. Withdraw
+
+Implement complete withdraw system.
+
+Statuses:
+
+Pending
+
+Approved
+
+Rejected
+
+Completed
+
+Wallet updates only after approval.
+
+---
+
+6. Swap Center
+
+Implement complete Swap Center.
+
+Support:
+
+Pi ↔ IDPoints
+
+IDR ↔ IDPoints
+
+USD ↔ IDPoints
+
+Preview before confirmation.
+
+Validate balances.
+
+Create transaction history.
+
+---
+
+7. Daily Check-In
+
+Only once every 24 hours.
+
+Prevent abuse.
+
+Prevent refresh exploit.
+
+Store timestamp.
+
+Display countdown.
+
+---
+
+8. Wallet
+
+Wallet balance must only calculate from confirmed transactions.
+
+Pending transactions must never affect balance.
+
+---
+
+9. Transaction History
+
+Every activity must be recorded.
+
+Deposit
+
+Withdraw
+
+Swap
+
+Check-In
+
+Marketplace
+
+Membership
+
+Rewards
+
+Statuses:
+
+Pending
+
+Success
+
+Cancelled
+
+Failed
+
+---
+
+10. Activate Every Profile Feature
+
+Enable ALL profile menus.
+
+Including:
+
+Profile
+
+Edit Profile
+
+Islamic Profile Card
+
+Membership
+
+Level
+
+Wallet
+
+Pi Wallet
+
+Wallet Address
+
+Security
+
+Privacy
+
+Notification Settings
+
+Language
+
+Theme
+
+Help Center
+
+Support
+
+Terms
+
+Privacy Policy
+
+Logout
+
+Everything must work.
+
+No placeholder pages.
+
+---
+
+11. Islamic Profile Card
+
+Generate profile card automatically.
+
+Include:
+
+Photo
+
+Full Name
+
+Username
+
+Member ID
+
+Wallet Address
+
+Membership
+
+Registration Date
+
+QR Code
+
+Islamic Green + Gold Theme.
+
+Membership Levels:
+
+Bronze
+
+Silver
+
+Gold
+
+Platinum
+
+Diamond
+
+VIP
+
+Administrator
+
+---
+
+12. International Language System (IMPORTANT)
+
+Implement a complete multilingual (i18n) system.
+
+Changing the language must translate the ENTIRE application.
+
+This includes:
+
+Navigation
+
+Buttons
+
+Dialogs
+
+Alerts
+
+Notifications
+
+Cards
+
+Menus
+
+Forms
+
+Validation Messages
+
+Error Messages
+
+Loading Messages
+
+Settings
+
+Profile
+
+Wallet
+
+Marketplace
+
+Transaction History
+
+Membership
+
+Rewards
+
+Admin Messages
+
+Footer
+
+Headers
+
+Tooltips
+
+Everything inside the application.
+
+No text should remain in the previous language.
+
+Supported languages:
+
+🇮🇩 Bahasa Indonesia
+
+🇺🇸 English
+
+🇸🇦 العربية
+
+🇯🇵 日本語
+
+🇰🇷 한국어
+
+🇨🇳 简体中文
+
+🇹🇼 繁體中文
+
+🇫🇷 Français
+
+🇩🇪 Deutsch
+
+🇪🇸 Español
+
+🇷🇺 Русский
+
+🇵🇹 Português
+
+Language selection must:
+
+✔ Change immediately
+
+✔ Save user preference
+
+✔ Persist after refresh
+
+✔ Persist after login
+
+✔ Work across every page
+
+---
+
+13. Menu Review
+
+Inspect every existing menu.
+
+If any menu is disabled:
+
+Activate it.
+
+If any menu is empty:
+
+Complete it.
+
+If navigation is broken:
+
+Repair it.
+
+No dead links.
+
+No placeholder pages.
+
+---
+
+14. Code Quality
+
+Review the entire project.
+
+Improve:
+
+Performance
+
+Security
+
+Scalability
+
+Clean Code
+
+Reusable Components
+
+Type Safety
+
+Responsive Layout
+
+Accessibility
+
+Do not remove any existing features.
+
+Only improve, repair and complete the application.
+
+Return a summary after finishing:
+
+✔ Fixed Bugs
+
+✔ Completed Features
+
+✔ Activated Menus
+
+✔ Remaining TODO

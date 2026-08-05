@@ -1,11 +1,8 @@
 /**
  * Global client-side IDPoints ledger + Daily Check-In state.
  *
- * Uses a module-level singleton store with subscribers so that every
- * component (Home, Wallet, Swap, Marketplace, Check-In, Staking…)
- * observes the exact same balance and updates instantly on any change
- * inside the same tab. Persisted to localStorage — swap for a Supabase-
- * backed adapter later without touching call sites.
+ * Balance ONLY reflects confirmed (status="success") transactions.
+ * Pending transactions are logged but do NOT affect balance until confirmed.
  */
 
 import { useSyncExternalStore, useCallback } from "react";
@@ -41,7 +38,12 @@ export type TxKind =
   | "withdraw"
   | "stake"
   | "unstake"
-  | "stake_reward";
+  | "stake_reward"
+  | "marketplace"
+  | "membership"
+  | "reward";
+
+export type TxStatus = "pending" | "success" | "cancelled" | "failed";
 
 export type WalletTx = {
   id: string;
@@ -49,6 +51,7 @@ export type WalletTx = {
   delta: number;
   note: string;
   at: number;
+  status: TxStatus;
 };
 
 export type StakeEntry = {
@@ -82,6 +85,21 @@ function write(key: string, v: unknown) {
   try { localStorage.setItem(key, JSON.stringify(v)); } catch { /* ignore */ }
 }
 
+/* Migrate old txs that lack status field */
+function migrateTxs(txs: unknown[]): WalletTx[] {
+  return txs.map((t: unknown) => {
+    const tx = t as Record<string, unknown>;
+    return {
+      id: tx.id as string ?? crypto.randomUUID(),
+      kind: tx.kind as TxKind ?? "deposit",
+      delta: tx.delta as number ?? 0,
+      note: tx.note as string ?? "",
+      at: tx.at as number ?? Date.now(),
+      status: (tx.status as TxStatus) ?? "success",
+    };
+  });
+}
+
 /* ---------------- Singleton store ---------------- */
 type State = {
   balance: number;
@@ -103,11 +121,12 @@ const listeners = new Set<() => void>();
 
 function hydrate() {
   if (hydrated || typeof window === "undefined") return;
+  const rawTxs = read<unknown[]>(K_TX, []);
   STATE = {
     balance: read<number>(K_BAL, 0),
     checkin: read<CheckinState>(K_CHK, DEFAULT_CHECKIN),
     swaps: read<SwapEntry[]>(K_SWAP, []),
-    txs: read<WalletTx[]>(K_TX, []),
+    txs: migrateTxs(rawTxs),
     staking: read<StakingState>(K_STAKE, DEFAULT_STAKING),
   };
   hydrated = true;
@@ -117,7 +136,7 @@ function hydrate() {
       if (e.key === K_BAL) setState({ balance: read<number>(K_BAL, 0) });
       else if (e.key === K_CHK) setState({ checkin: read<CheckinState>(K_CHK, DEFAULT_CHECKIN) });
       else if (e.key === K_SWAP) setState({ swaps: read<SwapEntry[]>(K_SWAP, []) });
-      else if (e.key === K_TX) setState({ txs: read<WalletTx[]>(K_TX, []) });
+      else if (e.key === K_TX) setState({ txs: migrateTxs(read<unknown[]>(K_TX, [])) });
       else if (e.key === K_STAKE) setState({ staking: read<StakingState>(K_STAKE, DEFAULT_STAKING) });
     });
   }
@@ -143,16 +162,17 @@ function useSlice<T>(select: (s: State) => T): T {
 }
 
 /* ---------------- Transaction log ---------------- */
-function logTx(kind: TxKind, delta: number, note: string) {
-  const tx: WalletTx = { id: crypto.randomUUID(), kind, delta, note, at: Date.now() };
+function logTx(kind: TxKind, delta: number, note: string, status: TxStatus = "success"): WalletTx {
+  const tx: WalletTx = { id: crypto.randomUUID(), kind, delta, note, at: Date.now(), status };
   const next = [tx, ...STATE.txs].slice(0, 200);
   write(K_TX, next);
   setState({ txs: next });
+  return tx;
 }
 
 /* ---------------- Public API ---------------- */
 
-/** IDPoints balance — shared across every consumer. */
+/** IDPoints balance — only reflects confirmed transactions. */
 export function useIdpointsBalance() {
   const balance = useSlice((s) => s.balance);
 
@@ -177,6 +197,87 @@ export function useTransactions() {
   const txs = useSlice((s) => s.txs);
   const clear = useCallback(() => { write(K_TX, []); setState({ txs: [] }); }, []);
   return { txs, clear };
+}
+
+/* ---------------- Deposit (secure pending flow) ---------------- */
+/**
+ * Step 1: Create a PENDING deposit — does NOT credit balance.
+ * Returns the transaction ID for later confirmation.
+ */
+export function createPendingDeposit(amount: number, note: string): string {
+  hydrate();
+  const tx = logTx("deposit", amount, note, "pending");
+  return tx.id;
+}
+
+/**
+ * Step 2: Confirm a pending deposit — credits balance and marks SUCCESS.
+ */
+export function confirmDeposit(txId: string): boolean {
+  hydrate();
+  const tx = STATE.txs.find((t) => t.id === txId && t.status === "pending" && t.kind === "deposit");
+  if (!tx) return false;
+  const nb = Math.max(0, Math.round(STATE.balance + tx.delta));
+  write(K_BAL, nb);
+  const updatedTxs = STATE.txs.map((t) => t.id === txId ? { ...t, status: "success" as TxStatus } : t);
+  write(K_TX, updatedTxs);
+  setState({ balance: nb, txs: updatedTxs });
+  return true;
+}
+
+/**
+ * Cancel a pending deposit.
+ */
+export function cancelDeposit(txId: string): void {
+  hydrate();
+  const updatedTxs = STATE.txs.map((t) =>
+    t.id === txId && t.status === "pending" ? { ...t, status: "cancelled" as TxStatus } : t
+  );
+  write(K_TX, updatedTxs);
+  setState({ txs: updatedTxs });
+}
+
+/* ---------------- Withdraw (secure pending flow) ---------------- */
+/**
+ * Step 1: Create a PENDING withdraw — debits balance immediately.
+ * Returns txId or null if insufficient balance.
+ */
+export function createPendingWithdraw(amount: number, note: string): string | null {
+  hydrate();
+  if (amount <= 0 || amount > STATE.balance) return null;
+  const nb = Math.max(0, Math.round(STATE.balance - amount));
+  write(K_BAL, nb);
+  const tx = logTx("withdraw", -amount, note, "pending");
+  setState({ balance: nb });
+  return tx.id;
+}
+
+/**
+ * Step 2a: Approve withdraw — marks as SUCCESS.
+ */
+export function approveWithdraw(txId: string): void {
+  hydrate();
+  const updatedTxs = STATE.txs.map((t) =>
+    t.id === txId && t.kind === "withdraw" ? { ...t, status: "success" as TxStatus } : t
+  );
+  write(K_TX, updatedTxs);
+  setState({ txs: updatedTxs });
+}
+
+/**
+ * Step 2b: Reject withdraw — refunds balance and marks as FAILED.
+ */
+export function rejectWithdraw(txId: string): void {
+  hydrate();
+  const tx = STATE.txs.find((t) => t.id === txId && t.kind === "withdraw");
+  if (!tx) return;
+  const nb = Math.max(0, Math.round(STATE.balance + Math.abs(tx.delta)));
+  write(K_BAL, nb);
+  const updatedTxs = STATE.txs.map((t) =>
+    t.id === txId ? { ...t, status: "failed" as TxStatus } : t
+  );
+  write(K_TX, updatedTxs);
+  setState({ balance: nb, txs: updatedTxs });
 }
 
 /* ---------------- Daily Check-In ---------------- */
@@ -219,7 +320,7 @@ export function useCheckin() {
       cyclesCompleted,
       history: [{ day, amount, at: Date.now() }, ...STATE.checkin.history].slice(0, 30),
     });
-    // credit balance + record transaction atomically
+    // credit balance + record transaction
     const nextBal = Math.max(0, Math.round(STATE.balance + amount));
     write(K_BAL, nextBal);
     setState({ balance: nextBal });
@@ -323,11 +424,11 @@ export function useStaking() {
 }
 
 /** Optional escape hatch for pages that need to spend IDPoints directly. */
-export function spendIdpoints(amount: number, note: string): boolean {
+export function spendIdpoints(amount: number, note: string, kind: TxKind = "purchase"): boolean {
   hydrate();
   if (amount <= 0 || amount > STATE.balance) return false;
   const nb = STATE.balance - amount;
   write(K_BAL, nb); setState({ balance: nb });
-  logTx("purchase", -amount, note);
+  logTx(kind, -amount, note);
   return true;
 }

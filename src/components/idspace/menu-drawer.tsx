@@ -4,7 +4,7 @@ import {
   X, Home, Store, PlayCircle, Wallet, LineChart, Pickaxe, Gift,
   Newspaper, Users, History, Bell, Settings as SettingsIcon, HelpCircle,
   Info, LogOut, Check, Globe, DollarSign, Moon, Volume2, Vibrate, ArrowDownUp, CalendarCheck,
-  RefreshCw, Shield, FileText, ChevronRight, Star, Crown,
+  RefreshCw, Shield, FileText, ChevronRight, Star, Crown, User,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -14,10 +14,11 @@ import {
 type MenuKey =
   | "home" | "marketplace" | "play" | "swap" | "checkin" | "wallet" | "premium" | "finance"
   | "staking" | "rewards" | "news" | "community" | "history" | "rate"
-  | "notifications" | "settings" | "help" | "about" | "logout";
+  | "notifications" | "settings" | "help" | "about" | "logout" | "profile";
 
 const ITEMS: { key: MenuKey; icon: typeof Home; to?: string; danger?: boolean }[] = [
   { key: "home", icon: Home, to: "/" },
+  { key: "profile", icon: User, to: "/profile" },
   { key: "wallet", icon: Wallet, to: "/wallet" },
   { key: "marketplace", icon: Store, to: "/marketplace" },
   { key: "play", icon: PlayCircle, to: "/entertainment" },
@@ -26,15 +27,15 @@ const ITEMS: { key: MenuKey; icon: typeof Home; to?: string; danger?: boolean }[
   { key: "staking", icon: Pickaxe, to: "/staking" },
   { key: "premium", icon: Crown, to: "/premium" },
   { key: "community", icon: Users, to: "/community" },
+  { key: "notifications", icon: Bell, to: "/notifications" },
+  { key: "history", icon: History, to: "/wallet" },
   { key: "rate", icon: Star, to: "/community" },
-  { key: "finance", icon: LineChart },
-  { key: "rewards", icon: Gift },
+  { key: "finance", icon: LineChart, to: "/wallet" },
+  { key: "rewards", icon: Gift, to: "/checkin" },
   { key: "news", icon: Newspaper },
-  { key: "history", icon: History },
-  { key: "notifications", icon: Bell },
   { key: "settings", icon: SettingsIcon },
-  { key: "help", icon: HelpCircle },
-  { key: "about", icon: Info },
+  { key: "help", icon: HelpCircle, to: "/profile" },
+  { key: "about", icon: Info, to: "/profile" },
   { key: "logout", icon: LogOut, danger: true },
 ];
 
@@ -120,7 +121,7 @@ export function MenuDrawer({
         </nav>
 
         <div className="mt-6 text-center text-[10px] tracking-[.3em] gold-text opacity-70">
-          ID·SPACE FINANCE · v1.0.0
+          ID·SPACE FINANCE · v2.0.0
         </div>
       </aside>
     </div>
@@ -184,7 +185,7 @@ export function SettingsDialog({ open, onClose }: { open: boolean; onClose: () =
         </div>
 
         <div className="space-y-5 p-4">
-          {/* Language */}
+          {/* Language — 12 languages in a scrollable grid */}
           <section>
             <SectionLabel icon={<Globe className="h-4 w-4"/>} title={s.t("settings.language")}/>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -199,8 +200,8 @@ export function SettingsDialog({ open, onClose }: { open: boolean; onClose: () =
                       boxShadow: active ? "0 0 14px rgba(86,255,118,.2)" : undefined,
                     }}>
                     <span className="text-base">{l.flag}</span>
-                    <span className="flex-1 text-left">{l.name}</span>
-                    {active && <Check className="h-4 w-4" style={{ color: "#56FF76" }}/>}
+                    <span className="flex-1 text-left text-xs">{l.name}</span>
+                    {active && <Check className="h-4 w-4 shrink-0" style={{ color: "#56FF76" }}/>}
                   </button>
                 );
               })}
@@ -253,7 +254,7 @@ export function SettingsDialog({ open, onClose }: { open: boolean; onClose: () =
               {[
                 { icon: <Shield className="h-4 w-4"/>, label: s.t("settings.privacy"), to: "/privacy" },
                 { icon: <FileText className="h-4 w-4"/>, label: s.t("settings.terms"), to: "/terms" },
-                { icon: <Info className="h-4 w-4"/>, label: s.t("settings.about") },
+                { icon: <Info className="h-4 w-4"/>, label: s.t("settings.about"), to: "/profile" },
               ].map((r) => {
                 const inner = (
                   <>

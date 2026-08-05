@@ -1,0 +1,3 @@
+- [Vite host config](vite-host-config.md) — Lovable plugin defaults to IPv6/port 8080 which fails in Replit; must override with host:"0.0.0.0", port:5000, allowedHosts:"all".
+- [Check-in double-add bug](checkin-double-add.md) — useCheckin().claim() already credits balance internally; never also call useIdpointsBalance().add() after it.
+- [Deposit security pattern](deposit-security.md) — Pending deposits must not credit balance; use createPendingDeposit/confirmDeposit/cancelDeposit flow in idpoints-store.

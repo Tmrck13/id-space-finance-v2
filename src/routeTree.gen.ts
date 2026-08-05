@@ -13,8 +13,10 @@ import { Route as WalletRouteImport } from './routes/wallet'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SwapRouteImport } from './routes/swap'
 import { Route as StakingRouteImport } from './routes/staking'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PremiumRouteImport } from './routes/premium'
+import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MarketplaceRouteImport } from './routes/marketplace'
 import { Route as EntertainmentRouteImport } from './routes/entertainment'
 import { Route as CommunityRouteImport } from './routes/community'
@@ -50,6 +52,11 @@ const StakingRoute = StakingRouteImport.update({
   path: '/staking',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
@@ -58,6 +65,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const PremiumRoute = PremiumRouteImport.update({
   id: '/premium',
   path: '/premium',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MarketplaceRoute = MarketplaceRouteImport.update({
@@ -137,8 +149,10 @@ export interface FileRoutesByFullPath {
   '/community': typeof CommunityRoute
   '/entertainment': typeof EntertainmentRoute
   '/marketplace': typeof MarketplaceRoute
+  '/notifications': typeof NotificationsRoute
   '/premium': typeof PremiumRoute
   '/privacy': typeof PrivacyRoute
+  '/profile': typeof ProfileRoute
   '/staking': typeof StakingRoute
   '/swap': typeof SwapRoute
   '/terms': typeof TermsRoute
@@ -159,8 +173,10 @@ export interface FileRoutesByTo {
   '/community': typeof CommunityRoute
   '/entertainment': typeof EntertainmentRoute
   '/marketplace': typeof MarketplaceRoute
+  '/notifications': typeof NotificationsRoute
   '/premium': typeof PremiumRoute
   '/privacy': typeof PrivacyRoute
+  '/profile': typeof ProfileRoute
   '/staking': typeof StakingRoute
   '/swap': typeof SwapRoute
   '/terms': typeof TermsRoute
@@ -182,8 +198,10 @@ export interface FileRoutesById {
   '/community': typeof CommunityRoute
   '/entertainment': typeof EntertainmentRoute
   '/marketplace': typeof MarketplaceRoute
+  '/notifications': typeof NotificationsRoute
   '/premium': typeof PremiumRoute
   '/privacy': typeof PrivacyRoute
+  '/profile': typeof ProfileRoute
   '/staking': typeof StakingRoute
   '/swap': typeof SwapRoute
   '/terms': typeof TermsRoute
@@ -206,8 +224,10 @@ export interface FileRouteTypes {
     | '/community'
     | '/entertainment'
     | '/marketplace'
+    | '/notifications'
     | '/premium'
     | '/privacy'
+    | '/profile'
     | '/staking'
     | '/swap'
     | '/terms'
@@ -228,8 +248,10 @@ export interface FileRouteTypes {
     | '/community'
     | '/entertainment'
     | '/marketplace'
+    | '/notifications'
     | '/premium'
     | '/privacy'
+    | '/profile'
     | '/staking'
     | '/swap'
     | '/terms'
@@ -250,8 +272,10 @@ export interface FileRouteTypes {
     | '/community'
     | '/entertainment'
     | '/marketplace'
+    | '/notifications'
     | '/premium'
     | '/privacy'
+    | '/profile'
     | '/staking'
     | '/swap'
     | '/terms'
@@ -273,8 +297,10 @@ export interface RootRouteChildren {
   CommunityRoute: typeof CommunityRoute
   EntertainmentRoute: typeof EntertainmentRoute
   MarketplaceRoute: typeof MarketplaceRoute
+  NotificationsRoute: typeof NotificationsRoute
   PremiumRoute: typeof PremiumRoute
   PrivacyRoute: typeof PrivacyRoute
+  ProfileRoute: typeof ProfileRoute
   StakingRoute: typeof StakingRoute
   SwapRoute: typeof SwapRoute
   TermsRoute: typeof TermsRoute
@@ -320,6 +346,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StakingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/privacy': {
       id: '/privacy'
       path: '/privacy'
@@ -332,6 +365,13 @@ declare module '@tanstack/react-router' {
       path: '/premium'
       fullPath: '/premium'
       preLoaderRoute: typeof PremiumRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/marketplace': {
@@ -441,8 +481,10 @@ const rootRouteChildren: RootRouteChildren = {
   CommunityRoute: CommunityRoute,
   EntertainmentRoute: EntertainmentRoute,
   MarketplaceRoute: MarketplaceRoute,
+  NotificationsRoute: NotificationsRoute,
   PremiumRoute: PremiumRoute,
   PrivacyRoute: PrivacyRoute,
+  ProfileRoute: ProfileRoute,
   StakingRoute: StakingRoute,
   SwapRoute: SwapRoute,
   TermsRoute: TermsRoute,

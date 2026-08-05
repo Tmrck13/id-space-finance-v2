@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { CalendarCheck, Check, Flame, Gift, Loader2, Sparkles, Trophy } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell, SectionTitle } from "@/components/idspace/shell";
-import { useCheckin, useIdpointsBalance } from "@/lib/idpoints-store";
+import { useCheckin } from "@/lib/idpoints-store";
 
 export const Route = createFileRoute("/checkin")({
   component: CheckinPage,
@@ -45,8 +45,9 @@ function CheckinPage() {
   const [confetti, setConfetti] = useState(false);
   const [tick, setTick] = useState(0);
 
+  // useCheckin's claim() already handles balance update + tx logging internally.
+  // Do NOT also call useIdpointsBalance().add() — that would double-credit.
   const { state, evaluate, claim } = useCheckin();
-  const { balance, add } = useIdpointsBalance();
 
   useEffect(() => {
     let alive = true;
@@ -69,7 +70,7 @@ function CheckinPage() {
     return () => { alive = false; };
   }, []);
 
-  // Live countdown tick
+  // Live countdown tick — 1s interval
   useEffect(() => {
     const t = setInterval(() => setTick((n) => n + 1), 1000);
     return () => clearInterval(t);
@@ -83,26 +84,28 @@ function CheckinPage() {
   const handleClaim = useCallback(async () => {
     if (!info.canClaim || claiming) return;
     setClaiming(true);
-    // brief animation delay
     await new Promise((r) => setTimeout(r, 400));
+
+    // claim() internally credits balance + logs the transaction.
+    // We must NOT call add() separately — that would double-credit.
     const res = claim(nextReward);
+
     if (res.ok) {
-      add(res.amount);
       toast.success(`+${res.amount.toLocaleString()} IDPoints (Day ${res.day})`);
       if (res.cycleCompleted) {
         setConfetti(true);
         setTimeout(() => setConfetti(false), 4000);
       }
     } else {
-      toast("Already claimed. Come back later.");
+      toast.error("Already claimed. Come back later.");
     }
     setClaiming(false);
-  }, [info.canClaim, claiming, claim, nextReward, add]);
+  }, [info.canClaim, claiming, claim, nextReward]);
 
   const idrValue = Math.floor(config.total / config.idpointsPerIdr);
 
   return (
-    <AppShell active="checkin">
+    <AppShell active="Check-In">
       <div className="mx-auto max-w-3xl">
         <div className="mb-4 text-center">
           <div className="text-[11px] tracking-[.4em] gold-text uppercase">IDPI • Rewards</div>
@@ -117,7 +120,11 @@ function CheckinPage() {
           <SectionTitle
             icon={<Flame className="h-4 w-4"/>}
             title="STREAK"
-            right={<span className="text-[11px] gold-text">Balance: {balance.toLocaleString()} IDPoints</span>}
+            right={
+              <span className="text-[11px] gold-text">
+                {state.streak}/{config.cycleDays} days · {state.cyclesCompleted} cycle{state.cyclesCompleted !== 1 ? "s" : ""} completed
+              </span>
+            }
           />
           <div className="grid grid-cols-3 gap-3">
             <StatBox label="Current Streak" value={`${state.streak}/${config.cycleDays}`} color="#FFD76A"/>
@@ -228,7 +235,7 @@ function CheckinPage() {
             <button
               onClick={handleClaim}
               disabled={!info.canClaim || claiming}
-              className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-black transition active:scale-95 disabled:opacity-50"
+              className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-black transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
               style={{
                 background: "linear-gradient(90deg,#FFD76A,#56FF76,#FFD76A)",
                 backgroundSize: "200% 100%",
@@ -280,7 +287,7 @@ function StatBox({ label, value, color }: { label: string; value: string; color:
   );
 }
 
-/* Lightweight CSS-only confetti burst — no extra deps. */
+/* Lightweight CSS-only confetti burst */
 function Confetti() {
   const pieces = useMemo(
     () => Array.from({ length: 80 }, (_, i) => ({
