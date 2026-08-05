@@ -21,8 +21,11 @@ import { Route as MarketplaceRouteImport } from './routes/marketplace'
 import { Route as EntertainmentRouteImport } from './routes/entertainment'
 import { Route as CommunityRouteImport } from './routes/community'
 import { Route as CheckinRouteImport } from './routes/checkin'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiPiConfigRouteImport } from './routes/api/pi-config'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as ApiPublicRewardsConfigRouteImport } from './routes/api/public/rewards-config'
 import { Route as ApiPublicRatesRouteImport } from './routes/api/public/rates'
 import { Route as ApiAuthPiRouteImport } from './routes/api/auth.pi'
@@ -92,6 +95,15 @@ const CheckinRoute = CheckinRouteImport.update({
   path: '/checkin',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -101,6 +113,11 @@ const ApiPiConfigRoute = ApiPiConfigRouteImport.update({
   id: '/api/pi-config',
   path: '/api/pi-config',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const ApiPublicRewardsConfigRoute = ApiPublicRewardsConfigRouteImport.update({
   id: '/api/public/rewards-config',
@@ -145,6 +162,7 @@ const ApiPublicPiApproveRoute = ApiPublicPiApproveRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/checkin': typeof CheckinRoute
   '/community': typeof CommunityRoute
   '/entertainment': typeof EntertainmentRoute
@@ -157,6 +175,7 @@ export interface FileRoutesByFullPath {
   '/swap': typeof SwapRoute
   '/terms': typeof TermsRoute
   '/wallet': typeof WalletRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/api/pi-config': typeof ApiPiConfigRoute
   '/api/auth/pi': typeof ApiAuthPiRoute
   '/api/public/rates': typeof ApiPublicRatesRoute
@@ -169,6 +188,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/checkin': typeof CheckinRoute
   '/community': typeof CommunityRoute
   '/entertainment': typeof EntertainmentRoute
@@ -181,6 +201,7 @@ export interface FileRoutesByTo {
   '/swap': typeof SwapRoute
   '/terms': typeof TermsRoute
   '/wallet': typeof WalletRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/api/pi-config': typeof ApiPiConfigRoute
   '/api/auth/pi': typeof ApiAuthPiRoute
   '/api/public/rates': typeof ApiPublicRatesRoute
@@ -194,6 +215,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
   '/checkin': typeof CheckinRoute
   '/community': typeof CommunityRoute
   '/entertainment': typeof EntertainmentRoute
@@ -206,6 +229,7 @@ export interface FileRoutesById {
   '/swap': typeof SwapRoute
   '/terms': typeof TermsRoute
   '/wallet': typeof WalletRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/api/pi-config': typeof ApiPiConfigRoute
   '/api/auth/pi': typeof ApiAuthPiRoute
   '/api/public/rates': typeof ApiPublicRatesRoute
@@ -220,6 +244,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/checkin'
     | '/community'
     | '/entertainment'
@@ -232,6 +257,7 @@ export interface FileRouteTypes {
     | '/swap'
     | '/terms'
     | '/wallet'
+    | '/admin'
     | '/api/pi-config'
     | '/api/auth/pi'
     | '/api/public/rates'
@@ -244,6 +270,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
     | '/checkin'
     | '/community'
     | '/entertainment'
@@ -256,6 +283,7 @@ export interface FileRouteTypes {
     | '/swap'
     | '/terms'
     | '/wallet'
+    | '/admin'
     | '/api/pi-config'
     | '/api/auth/pi'
     | '/api/public/rates'
@@ -268,6 +296,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
+    | '/auth'
     | '/checkin'
     | '/community'
     | '/entertainment'
@@ -280,6 +310,7 @@ export interface FileRouteTypes {
     | '/swap'
     | '/terms'
     | '/wallet'
+    | '/_authenticated/admin'
     | '/api/pi-config'
     | '/api/auth/pi'
     | '/api/public/rates'
@@ -293,6 +324,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
   CheckinRoute: typeof CheckinRoute
   CommunityRoute: typeof CommunityRoute
   EntertainmentRoute: typeof EntertainmentRoute
@@ -402,6 +435,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CheckinRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -415,6 +462,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/pi-config'
       preLoaderRoute: typeof ApiPiConfigRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/api/public/rewards-config': {
       id: '/api/public/rewards-config'
@@ -475,8 +529,21 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
   CheckinRoute: CheckinRoute,
   CommunityRoute: CommunityRoute,
   EntertainmentRoute: EntertainmentRoute,
@@ -502,13 +569,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
