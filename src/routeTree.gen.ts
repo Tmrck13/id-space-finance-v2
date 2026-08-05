@@ -9,38 +9,359 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WalletRouteImport } from './routes/wallet'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as SwapRouteImport } from './routes/swap'
+import { Route as StakingRouteImport } from './routes/staking'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as PremiumRouteImport } from './routes/premium'
+import { Route as MarketplaceRouteImport } from './routes/marketplace'
+import { Route as EntertainmentRouteImport } from './routes/entertainment'
+import { Route as CommunityRouteImport } from './routes/community'
+import { Route as CheckinRouteImport } from './routes/checkin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiPiConfigRouteImport } from './routes/api/pi-config'
+import { Route as ApiPublicRewardsConfigRouteImport } from './routes/api/public/rewards-config'
+import { Route as ApiPublicRatesRouteImport } from './routes/api/public/rates'
+import { Route as ApiAuthPiRouteImport } from './routes/api/auth.pi'
+import { Route as ApiPublicPiStatusRouteImport } from './routes/api/public/pi/status'
+import { Route as ApiPublicPiRewardsRouteImport } from './routes/api/public/pi/rewards'
+import { Route as ApiPublicPiIncompleteRouteImport } from './routes/api/public/pi/incomplete'
+import { Route as ApiPublicPiCompleteRouteImport } from './routes/api/public/pi/complete'
+import { Route as ApiPublicPiApproveRouteImport } from './routes/api/public/pi/approve'
 
+const WalletRoute = WalletRouteImport.update({
+  id: '/wallet',
+  path: '/wallet',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SwapRoute = SwapRouteImport.update({
+  id: '/swap',
+  path: '/swap',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StakingRoute = StakingRouteImport.update({
+  id: '/staking',
+  path: '/staking',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PremiumRoute = PremiumRouteImport.update({
+  id: '/premium',
+  path: '/premium',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketplaceRoute = MarketplaceRouteImport.update({
+  id: '/marketplace',
+  path: '/marketplace',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EntertainmentRoute = EntertainmentRouteImport.update({
+  id: '/entertainment',
+  path: '/entertainment',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommunityRoute = CommunityRouteImport.update({
+  id: '/community',
+  path: '/community',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckinRoute = CheckinRouteImport.update({
+  id: '/checkin',
+  path: '/checkin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPiConfigRoute = ApiPiConfigRouteImport.update({
+  id: '/api/pi-config',
+  path: '/api/pi-config',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicRewardsConfigRoute = ApiPublicRewardsConfigRouteImport.update({
+  id: '/api/public/rewards-config',
+  path: '/api/public/rewards-config',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicRatesRoute = ApiPublicRatesRouteImport.update({
+  id: '/api/public/rates',
+  path: '/api/public/rates',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAuthPiRoute = ApiAuthPiRouteImport.update({
+  id: '/api/auth/pi',
+  path: '/api/auth/pi',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicPiStatusRoute = ApiPublicPiStatusRouteImport.update({
+  id: '/api/public/pi/status',
+  path: '/api/public/pi/status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicPiRewardsRoute = ApiPublicPiRewardsRouteImport.update({
+  id: '/api/public/pi/rewards',
+  path: '/api/public/pi/rewards',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicPiIncompleteRoute = ApiPublicPiIncompleteRouteImport.update({
+  id: '/api/public/pi/incomplete',
+  path: '/api/public/pi/incomplete',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicPiCompleteRoute = ApiPublicPiCompleteRouteImport.update({
+  id: '/api/public/pi/complete',
+  path: '/api/public/pi/complete',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicPiApproveRoute = ApiPublicPiApproveRouteImport.update({
+  id: '/api/public/pi/approve',
+  path: '/api/public/pi/approve',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/checkin': typeof CheckinRoute
+  '/community': typeof CommunityRoute
+  '/entertainment': typeof EntertainmentRoute
+  '/marketplace': typeof MarketplaceRoute
+  '/premium': typeof PremiumRoute
+  '/privacy': typeof PrivacyRoute
+  '/staking': typeof StakingRoute
+  '/swap': typeof SwapRoute
+  '/terms': typeof TermsRoute
+  '/wallet': typeof WalletRoute
+  '/api/pi-config': typeof ApiPiConfigRoute
+  '/api/auth/pi': typeof ApiAuthPiRoute
+  '/api/public/rates': typeof ApiPublicRatesRoute
+  '/api/public/rewards-config': typeof ApiPublicRewardsConfigRoute
+  '/api/public/pi/approve': typeof ApiPublicPiApproveRoute
+  '/api/public/pi/complete': typeof ApiPublicPiCompleteRoute
+  '/api/public/pi/incomplete': typeof ApiPublicPiIncompleteRoute
+  '/api/public/pi/rewards': typeof ApiPublicPiRewardsRoute
+  '/api/public/pi/status': typeof ApiPublicPiStatusRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/checkin': typeof CheckinRoute
+  '/community': typeof CommunityRoute
+  '/entertainment': typeof EntertainmentRoute
+  '/marketplace': typeof MarketplaceRoute
+  '/premium': typeof PremiumRoute
+  '/privacy': typeof PrivacyRoute
+  '/staking': typeof StakingRoute
+  '/swap': typeof SwapRoute
+  '/terms': typeof TermsRoute
+  '/wallet': typeof WalletRoute
+  '/api/pi-config': typeof ApiPiConfigRoute
+  '/api/auth/pi': typeof ApiAuthPiRoute
+  '/api/public/rates': typeof ApiPublicRatesRoute
+  '/api/public/rewards-config': typeof ApiPublicRewardsConfigRoute
+  '/api/public/pi/approve': typeof ApiPublicPiApproveRoute
+  '/api/public/pi/complete': typeof ApiPublicPiCompleteRoute
+  '/api/public/pi/incomplete': typeof ApiPublicPiIncompleteRoute
+  '/api/public/pi/rewards': typeof ApiPublicPiRewardsRoute
+  '/api/public/pi/status': typeof ApiPublicPiStatusRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/checkin': typeof CheckinRoute
+  '/community': typeof CommunityRoute
+  '/entertainment': typeof EntertainmentRoute
+  '/marketplace': typeof MarketplaceRoute
+  '/premium': typeof PremiumRoute
+  '/privacy': typeof PrivacyRoute
+  '/staking': typeof StakingRoute
+  '/swap': typeof SwapRoute
+  '/terms': typeof TermsRoute
+  '/wallet': typeof WalletRoute
+  '/api/pi-config': typeof ApiPiConfigRoute
+  '/api/auth/pi': typeof ApiAuthPiRoute
+  '/api/public/rates': typeof ApiPublicRatesRoute
+  '/api/public/rewards-config': typeof ApiPublicRewardsConfigRoute
+  '/api/public/pi/approve': typeof ApiPublicPiApproveRoute
+  '/api/public/pi/complete': typeof ApiPublicPiCompleteRoute
+  '/api/public/pi/incomplete': typeof ApiPublicPiIncompleteRoute
+  '/api/public/pi/rewards': typeof ApiPublicPiRewardsRoute
+  '/api/public/pi/status': typeof ApiPublicPiStatusRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/checkin'
+    | '/community'
+    | '/entertainment'
+    | '/marketplace'
+    | '/premium'
+    | '/privacy'
+    | '/staking'
+    | '/swap'
+    | '/terms'
+    | '/wallet'
+    | '/api/pi-config'
+    | '/api/auth/pi'
+    | '/api/public/rates'
+    | '/api/public/rewards-config'
+    | '/api/public/pi/approve'
+    | '/api/public/pi/complete'
+    | '/api/public/pi/incomplete'
+    | '/api/public/pi/rewards'
+    | '/api/public/pi/status'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/checkin'
+    | '/community'
+    | '/entertainment'
+    | '/marketplace'
+    | '/premium'
+    | '/privacy'
+    | '/staking'
+    | '/swap'
+    | '/terms'
+    | '/wallet'
+    | '/api/pi-config'
+    | '/api/auth/pi'
+    | '/api/public/rates'
+    | '/api/public/rewards-config'
+    | '/api/public/pi/approve'
+    | '/api/public/pi/complete'
+    | '/api/public/pi/incomplete'
+    | '/api/public/pi/rewards'
+    | '/api/public/pi/status'
+  id:
+    | '__root__'
+    | '/'
+    | '/checkin'
+    | '/community'
+    | '/entertainment'
+    | '/marketplace'
+    | '/premium'
+    | '/privacy'
+    | '/staking'
+    | '/swap'
+    | '/terms'
+    | '/wallet'
+    | '/api/pi-config'
+    | '/api/auth/pi'
+    | '/api/public/rates'
+    | '/api/public/rewards-config'
+    | '/api/public/pi/approve'
+    | '/api/public/pi/complete'
+    | '/api/public/pi/incomplete'
+    | '/api/public/pi/rewards'
+    | '/api/public/pi/status'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CheckinRoute: typeof CheckinRoute
+  CommunityRoute: typeof CommunityRoute
+  EntertainmentRoute: typeof EntertainmentRoute
+  MarketplaceRoute: typeof MarketplaceRoute
+  PremiumRoute: typeof PremiumRoute
+  PrivacyRoute: typeof PrivacyRoute
+  StakingRoute: typeof StakingRoute
+  SwapRoute: typeof SwapRoute
+  TermsRoute: typeof TermsRoute
+  WalletRoute: typeof WalletRoute
+  ApiPiConfigRoute: typeof ApiPiConfigRoute
+  ApiAuthPiRoute: typeof ApiAuthPiRoute
+  ApiPublicRatesRoute: typeof ApiPublicRatesRoute
+  ApiPublicRewardsConfigRoute: typeof ApiPublicRewardsConfigRoute
+  ApiPublicPiApproveRoute: typeof ApiPublicPiApproveRoute
+  ApiPublicPiCompleteRoute: typeof ApiPublicPiCompleteRoute
+  ApiPublicPiIncompleteRoute: typeof ApiPublicPiIncompleteRoute
+  ApiPublicPiRewardsRoute: typeof ApiPublicPiRewardsRoute
+  ApiPublicPiStatusRoute: typeof ApiPublicPiStatusRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/wallet': {
+      id: '/wallet'
+      path: '/wallet'
+      fullPath: '/wallet'
+      preLoaderRoute: typeof WalletRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/swap': {
+      id: '/swap'
+      path: '/swap'
+      fullPath: '/swap'
+      preLoaderRoute: typeof SwapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/staking': {
+      id: '/staking'
+      path: '/staking'
+      fullPath: '/staking'
+      preLoaderRoute: typeof StakingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/premium': {
+      id: '/premium'
+      path: '/premium'
+      fullPath: '/premium'
+      preLoaderRoute: typeof PremiumRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/marketplace': {
+      id: '/marketplace'
+      path: '/marketplace'
+      fullPath: '/marketplace'
+      preLoaderRoute: typeof MarketplaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/entertainment': {
+      id: '/entertainment'
+      path: '/entertainment'
+      fullPath: '/entertainment'
+      preLoaderRoute: typeof EntertainmentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/community': {
+      id: '/community'
+      path: '/community'
+      fullPath: '/community'
+      preLoaderRoute: typeof CommunityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkin': {
+      id: '/checkin'
+      path: '/checkin'
+      fullPath: '/checkin'
+      preLoaderRoute: typeof CheckinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +369,93 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/pi-config': {
+      id: '/api/pi-config'
+      path: '/api/pi-config'
+      fullPath: '/api/pi-config'
+      preLoaderRoute: typeof ApiPiConfigRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/rewards-config': {
+      id: '/api/public/rewards-config'
+      path: '/api/public/rewards-config'
+      fullPath: '/api/public/rewards-config'
+      preLoaderRoute: typeof ApiPublicRewardsConfigRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/rates': {
+      id: '/api/public/rates'
+      path: '/api/public/rates'
+      fullPath: '/api/public/rates'
+      preLoaderRoute: typeof ApiPublicRatesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/auth/pi': {
+      id: '/api/auth/pi'
+      path: '/api/auth/pi'
+      fullPath: '/api/auth/pi'
+      preLoaderRoute: typeof ApiAuthPiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/pi/status': {
+      id: '/api/public/pi/status'
+      path: '/api/public/pi/status'
+      fullPath: '/api/public/pi/status'
+      preLoaderRoute: typeof ApiPublicPiStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/pi/rewards': {
+      id: '/api/public/pi/rewards'
+      path: '/api/public/pi/rewards'
+      fullPath: '/api/public/pi/rewards'
+      preLoaderRoute: typeof ApiPublicPiRewardsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/pi/incomplete': {
+      id: '/api/public/pi/incomplete'
+      path: '/api/public/pi/incomplete'
+      fullPath: '/api/public/pi/incomplete'
+      preLoaderRoute: typeof ApiPublicPiIncompleteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/pi/complete': {
+      id: '/api/public/pi/complete'
+      path: '/api/public/pi/complete'
+      fullPath: '/api/public/pi/complete'
+      preLoaderRoute: typeof ApiPublicPiCompleteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/pi/approve': {
+      id: '/api/public/pi/approve'
+      path: '/api/public/pi/approve'
+      fullPath: '/api/public/pi/approve'
+      preLoaderRoute: typeof ApiPublicPiApproveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CheckinRoute: CheckinRoute,
+  CommunityRoute: CommunityRoute,
+  EntertainmentRoute: EntertainmentRoute,
+  MarketplaceRoute: MarketplaceRoute,
+  PremiumRoute: PremiumRoute,
+  PrivacyRoute: PrivacyRoute,
+  StakingRoute: StakingRoute,
+  SwapRoute: SwapRoute,
+  TermsRoute: TermsRoute,
+  WalletRoute: WalletRoute,
+  ApiPiConfigRoute: ApiPiConfigRoute,
+  ApiAuthPiRoute: ApiAuthPiRoute,
+  ApiPublicRatesRoute: ApiPublicRatesRoute,
+  ApiPublicRewardsConfigRoute: ApiPublicRewardsConfigRoute,
+  ApiPublicPiApproveRoute: ApiPublicPiApproveRoute,
+  ApiPublicPiCompleteRoute: ApiPublicPiCompleteRoute,
+  ApiPublicPiIncompleteRoute: ApiPublicPiIncompleteRoute,
+  ApiPublicPiRewardsRoute: ApiPublicPiRewardsRoute,
+  ApiPublicPiStatusRoute: ApiPublicPiStatusRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

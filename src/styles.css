@@ -2,7 +2,79 @@
 @source "../src";
 @import "tw-animate-css";
 
+@theme {
+  --font-display: "Cinzel", "Playfair Display", serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui;
+  --color-emerald-glow: #56FF76;
+  --color-luxury-gold: #FFD76A;
+  --color-soft-gold: #C7A650;
+  --color-idspace-bg: #050806;
+  --color-idspace-card: #0B1A12;
+  --color-idspace-card2: #12351D;
+}
+
 @custom-variant dark (&:is(.dark *));
+
+@utility glass-card {
+  background: linear-gradient(160deg, rgba(18,53,29,.55), rgba(11,26,18,.75));
+  border: 1px solid rgba(255,220,120,.22);
+  border-radius: 18px;
+  box-shadow:
+    0 0 0 1px rgba(255,215,106,.08) inset,
+    0 0 24px rgba(86,255,118,.08) inset,
+    0 12px 40px rgba(0,0,0,.55),
+    0 0 24px rgba(86,255,118,.06);
+  backdrop-filter: blur(14px) saturate(140%);
+  position: relative;
+}
+@utility gold-border {
+  border: 1px solid rgba(255,215,106,.45);
+  box-shadow: 0 0 0 1px rgba(255,215,106,.15) inset, 0 0 18px rgba(255,215,106,.15);
+}
+@utility gold-text {
+  color: #FFD76A;
+  text-shadow: 0 0 12px rgba(255,215,106,.45);
+}
+@utility emerald-text {
+  color: #56FF76;
+  text-shadow: 0 0 12px rgba(86,255,118,.5);
+}
+@utility hex-clip {
+  clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%);
+}
+
+@keyframes aurora {
+  0%,100% { transform: translate3d(0,0,0) scale(1); opacity: .55; }
+  50% { transform: translate3d(-4%, 2%, 0) scale(1.1); opacity: .8; }
+}
+@keyframes floatY {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes twinkle {
+  0%,100% { opacity: .2; }
+  50% { opacity: 1; }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes pulseGlow {
+  0%,100% { box-shadow: 0 0 20px rgba(86,255,118,.35), 0 0 40px rgba(255,215,106,.15); }
+  50% { box-shadow: 0 0 34px rgba(86,255,118,.65), 0 0 70px rgba(255,215,106,.35); }
+}
+.anim-aurora { animation: aurora 14s ease-in-out infinite; }
+.anim-float { animation: floatY 5s ease-in-out infinite; }
+.anim-twinkle { animation: twinkle 3s ease-in-out infinite; }
+.anim-pulse-glow { animation: pulseGlow 3.5s ease-in-out infinite; }
+.gold-shimmer {
+  background: linear-gradient(90deg, #C7A650 0%, #FFD76A 25%, #FFF3B0 50%, #FFD76A 75%, #C7A650 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 6s linear infinite;
+}
 
 /*
  * Design system definition.
