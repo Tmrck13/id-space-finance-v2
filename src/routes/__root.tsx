@@ -14,6 +14,8 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { SettingsProvider } from "@/lib/app-settings";
 import { PiAuthProvider } from "@/lib/pi-auth";
+import { supabase } from "@/integrations/supabase/client";
+
 
 function NotFoundComponent() {
   return (
