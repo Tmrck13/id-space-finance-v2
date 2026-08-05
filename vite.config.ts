@@ -17,7 +17,9 @@ export default defineConfig({
       host: "0.0.0.0",
       port: 5000,
       strictPort: true,
-      allowedHosts: "all",
+      // Replit's preview runs through a proxied development domain.
+      // `true` explicitly accepts that active Replit host.
+      allowedHosts: true,
     },
   },
 });
