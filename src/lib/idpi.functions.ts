@@ -26,23 +26,22 @@ export const getMyAccount = createServerFn({ method: "GET" })
       supabase.from("user_roles").select("role").eq("user_id", userId),
     ]);
 
-    let ledger: unknown[] = [];
-    if (wallet.data?.id) {
-      const res = await supabase
-        .from("ledger")
-        .select("*")
-        .eq("wallet_id", wallet.data.id)
-        .order("created_at", { ascending: false })
-        .limit(50);
-      ledger = res.data ?? [];
-    }
+    const ledgerRes = wallet.data?.id
+      ? await supabase
+          .from("ledger")
+          .select("*")
+          .eq("wallet_id", wallet.data.id)
+          .order("created_at", { ascending: false })
+          .limit(50)
+      : null;
 
     return {
       profile: profile.data ?? null,
       wallet: wallet.data ?? null,
       roles: (roles.data ?? []).map((r) => r.role),
-      ledger,
+      ledger: ledgerRes?.data ?? [],
     };
+
   });
 
 export const updateMyProfile = createServerFn({ method: "POST" })
@@ -173,9 +172,9 @@ export const adminPostLedgerEntry = createServerFn({ method: "POST" })
       _transaction_type: data.transactionType,
       _currency: data.currency,
       _amount: data.amount,
-      _description: data.description ?? null,
+      _description: data.description,
       _status: data.status,
-      _reference: null,
+
     });
     if (error) throw new Error(error.message);
 
