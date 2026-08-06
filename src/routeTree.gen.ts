@@ -17,6 +17,7 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PremiumRouteImport } from './routes/premium'
 import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as McpRouteImport } from './routes/mcp'
 import { Route as MarketplaceRouteImport } from './routes/marketplace'
 import { Route as EntertainmentRouteImport } from './routes/entertainment'
 import { Route as CommunityRouteImport } from './routes/community'
@@ -26,9 +27,13 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiPiConfigRouteImport } from './routes/api/pi-config'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as ApiPublicRewardsConfigRouteImport } from './routes/api/public/rewards-config'
 import { Route as ApiPublicRatesRouteImport } from './routes/api/public/rates'
 import { Route as ApiAuthPiRouteImport } from './routes/api/auth.pi'
+import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
+import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as ApiPublicPiStatusRouteImport } from './routes/api/public/pi/status'
 import { Route as ApiPublicPiRewardsRouteImport } from './routes/api/public/pi/rewards'
 import { Route as ApiPublicPiIncompleteRouteImport } from './routes/api/public/pi/incomplete'
@@ -75,6 +80,11 @@ const NotificationsRoute = NotificationsRouteImport.update({
   path: '/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MarketplaceRoute = MarketplaceRouteImport.update({
   id: '/marketplace',
   path: '/marketplace',
@@ -119,6 +129,18 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char91DotmcpChar93ListToolsRoute =
+  Char91DotmcpChar93ListToolsRouteImport.update({
+    id: '/.mcp/list-tools',
+    path: '/.mcp/list-tools',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicRewardsConfigRoute = ApiPublicRewardsConfigRouteImport.update({
   id: '/api/public/rewards-config',
   path: '/api/public/rewards-config',
@@ -132,6 +154,17 @@ const ApiPublicRatesRoute = ApiPublicRatesRouteImport.update({
 const ApiAuthPiRoute = ApiAuthPiRouteImport.update({
   id: '/api/auth/pi',
   path: '/api/auth/pi',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Char91DotmcpChar93InvokeToolToolRoute =
+  Char91DotmcpChar93InvokeToolToolRouteImport.update({
+    id: '/.mcp/invoke-tool/$tool',
+    path: '/.mcp/invoke-tool/$tool',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicPiStatusRoute = ApiPublicPiStatusRouteImport.update({
@@ -167,6 +200,7 @@ export interface FileRoutesByFullPath {
   '/community': typeof CommunityRoute
   '/entertainment': typeof EntertainmentRoute
   '/marketplace': typeof MarketplaceRoute
+  '/mcp': typeof McpRoute
   '/notifications': typeof NotificationsRoute
   '/premium': typeof PremiumRoute
   '/privacy': typeof PrivacyRoute
@@ -175,8 +209,12 @@ export interface FileRoutesByFullPath {
   '/swap': typeof SwapRoute
   '/terms': typeof TermsRoute
   '/wallet': typeof WalletRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/api/pi-config': typeof ApiPiConfigRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/auth/pi': typeof ApiAuthPiRoute
   '/api/public/rates': typeof ApiPublicRatesRoute
   '/api/public/rewards-config': typeof ApiPublicRewardsConfigRoute
@@ -193,6 +231,7 @@ export interface FileRoutesByTo {
   '/community': typeof CommunityRoute
   '/entertainment': typeof EntertainmentRoute
   '/marketplace': typeof MarketplaceRoute
+  '/mcp': typeof McpRoute
   '/notifications': typeof NotificationsRoute
   '/premium': typeof PremiumRoute
   '/privacy': typeof PrivacyRoute
@@ -201,8 +240,12 @@ export interface FileRoutesByTo {
   '/swap': typeof SwapRoute
   '/terms': typeof TermsRoute
   '/wallet': typeof WalletRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/api/pi-config': typeof ApiPiConfigRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/auth/pi': typeof ApiAuthPiRoute
   '/api/public/rates': typeof ApiPublicRatesRoute
   '/api/public/rewards-config': typeof ApiPublicRewardsConfigRoute
@@ -221,6 +264,7 @@ export interface FileRoutesById {
   '/community': typeof CommunityRoute
   '/entertainment': typeof EntertainmentRoute
   '/marketplace': typeof MarketplaceRoute
+  '/mcp': typeof McpRoute
   '/notifications': typeof NotificationsRoute
   '/premium': typeof PremiumRoute
   '/privacy': typeof PrivacyRoute
@@ -229,8 +273,12 @@ export interface FileRoutesById {
   '/swap': typeof SwapRoute
   '/terms': typeof TermsRoute
   '/wallet': typeof WalletRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/api/pi-config': typeof ApiPiConfigRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/auth/pi': typeof ApiAuthPiRoute
   '/api/public/rates': typeof ApiPublicRatesRoute
   '/api/public/rewards-config': typeof ApiPublicRewardsConfigRoute
@@ -249,6 +297,7 @@ export interface FileRouteTypes {
     | '/community'
     | '/entertainment'
     | '/marketplace'
+    | '/mcp'
     | '/notifications'
     | '/premium'
     | '/privacy'
@@ -257,8 +306,12 @@ export interface FileRouteTypes {
     | '/swap'
     | '/terms'
     | '/wallet'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/admin'
     | '/api/pi-config'
+    | '/.lovable/oauth/consent'
+    | '/.mcp/invoke-tool/$tool'
     | '/api/auth/pi'
     | '/api/public/rates'
     | '/api/public/rewards-config'
@@ -275,6 +328,7 @@ export interface FileRouteTypes {
     | '/community'
     | '/entertainment'
     | '/marketplace'
+    | '/mcp'
     | '/notifications'
     | '/premium'
     | '/privacy'
@@ -283,8 +337,12 @@ export interface FileRouteTypes {
     | '/swap'
     | '/terms'
     | '/wallet'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/admin'
     | '/api/pi-config'
+    | '/.lovable/oauth/consent'
+    | '/.mcp/invoke-tool/$tool'
     | '/api/auth/pi'
     | '/api/public/rates'
     | '/api/public/rewards-config'
@@ -302,6 +360,7 @@ export interface FileRouteTypes {
     | '/community'
     | '/entertainment'
     | '/marketplace'
+    | '/mcp'
     | '/notifications'
     | '/premium'
     | '/privacy'
@@ -310,8 +369,12 @@ export interface FileRouteTypes {
     | '/swap'
     | '/terms'
     | '/wallet'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/_authenticated/admin'
     | '/api/pi-config'
+    | '/.lovable/oauth/consent'
+    | '/.mcp/invoke-tool/$tool'
     | '/api/auth/pi'
     | '/api/public/rates'
     | '/api/public/rewards-config'
@@ -330,6 +393,7 @@ export interface RootRouteChildren {
   CommunityRoute: typeof CommunityRoute
   EntertainmentRoute: typeof EntertainmentRoute
   MarketplaceRoute: typeof MarketplaceRoute
+  McpRoute: typeof McpRoute
   NotificationsRoute: typeof NotificationsRoute
   PremiumRoute: typeof PremiumRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -338,7 +402,11 @@ export interface RootRouteChildren {
   SwapRoute: typeof SwapRoute
   TermsRoute: typeof TermsRoute
   WalletRoute: typeof WalletRoute
+  Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
+  Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   ApiPiConfigRoute: typeof ApiPiConfigRoute
+  DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
+  Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiAuthPiRoute: typeof ApiAuthPiRoute
   ApiPublicRatesRoute: typeof ApiPublicRatesRoute
   ApiPublicRewardsConfigRoute: typeof ApiPublicRewardsConfigRoute
@@ -407,6 +475,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/marketplace': {
       id: '/marketplace'
       path: '/marketplace'
@@ -470,6 +545,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.mcp/list-tools': {
+      id: '/.mcp/list-tools'
+      path: '/.mcp/list-tools'
+      fullPath: '/.mcp/list-tools'
+      preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/rewards-config': {
       id: '/api/public/rewards-config'
       path: '/api/public/rewards-config'
@@ -489,6 +578,20 @@ declare module '@tanstack/react-router' {
       path: '/api/auth/pi'
       fullPath: '/api/auth/pi'
       preLoaderRoute: typeof ApiAuthPiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.mcp/invoke-tool/$tool': {
+      id: '/.mcp/invoke-tool/$tool'
+      path: '/.mcp/invoke-tool/$tool'
+      fullPath: '/.mcp/invoke-tool/$tool'
+      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/pi/status': {
@@ -548,6 +651,7 @@ const rootRouteChildren: RootRouteChildren = {
   CommunityRoute: CommunityRoute,
   EntertainmentRoute: EntertainmentRoute,
   MarketplaceRoute: MarketplaceRoute,
+  McpRoute: McpRoute,
   NotificationsRoute: NotificationsRoute,
   PremiumRoute: PremiumRoute,
   PrivacyRoute: PrivacyRoute,
@@ -556,7 +660,12 @@ const rootRouteChildren: RootRouteChildren = {
   SwapRoute: SwapRoute,
   TermsRoute: TermsRoute,
   WalletRoute: WalletRoute,
+  Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
+  Char91DotwellKnownChar93OauthProtectedResourceRoute:
+    Char91DotwellKnownChar93OauthProtectedResourceRoute,
   ApiPiConfigRoute: ApiPiConfigRoute,
+  DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
+  Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   ApiAuthPiRoute: ApiAuthPiRoute,
   ApiPublicRatesRoute: ApiPublicRatesRoute,
   ApiPublicRewardsConfigRoute: ApiPublicRewardsConfigRoute,
