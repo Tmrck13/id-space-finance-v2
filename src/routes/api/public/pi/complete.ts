@@ -31,8 +31,8 @@ export const Route = createFileRoute("/api/public/pi/complete")({
               { status: 400 },
             );
           }
+          const product = getProduct(record.productId);
           if (!record.rewardGranted) {
-            const product = getProduct(record.productId);
             if (product?.reward.idpoints) {
               RewardStore.grantIdpoints(record.userUid, product.reward.idpoints);
             }
@@ -44,6 +44,14 @@ export const Route = createFileRoute("/api/public/pi/complete")({
           } else {
             PurchaseStore.update(paymentId, { status: "completed", txid });
           }
+          const { settlePiPayment } = await import("@/lib/pi-db.server");
+          await settlePiPayment({
+            paymentId,
+            txid,
+            status: "completed",
+            idpointsReward: product?.reward.idpoints,
+            productId: record.productId,
+          });
           const balance = RewardStore.getBalance(record.userUid);
           return Response.json({
             ok: true,

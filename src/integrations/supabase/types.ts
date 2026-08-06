@@ -71,6 +71,88 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_checkin: {
+        Row: {
+          checkin_date: string
+          created_at: string
+          id: string
+          ledger_id: string | null
+          reward_amount: number
+          reward_currency: string
+          streak: number
+          user_id: string
+        }
+        Insert: {
+          checkin_date?: string
+          created_at?: string
+          id?: string
+          ledger_id?: string | null
+          reward_amount?: number
+          reward_currency?: string
+          streak?: number
+          user_id: string
+        }
+        Update: {
+          checkin_date?: string
+          created_at?: string
+          id?: string
+          ledger_id?: string | null
+          reward_amount?: number
+          reward_currency?: string
+          streak?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_checkin_ledger_id_fkey"
+            columns: ["ledger_id"]
+            isOneToOne: false
+            referencedRelation: "ledger"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      idpoints: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string | null
+          event_type: string
+          id: string
+          ledger_id: string | null
+          source: string | null
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          description?: string | null
+          event_type?: string
+          id?: string
+          ledger_id?: string | null
+          source?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string | null
+          event_type?: string
+          id?: string
+          ledger_id?: string | null
+          source?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "idpoints_ledger_id_fkey"
+            columns: ["ledger_id"]
+            isOneToOne: false
+            referencedRelation: "ledger"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ledger: {
         Row: {
           amount: number
@@ -151,6 +233,51 @@ export type Database = {
         }
         Relationships: []
       }
+      missions: {
+        Row: {
+          code: string
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          mission_type: string
+          order_number: number
+          reward_amount: number
+          reward_currency: string
+          target_value: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          mission_type?: string
+          order_number?: number
+          reward_amount?: number
+          reward_currency?: string
+          target_value?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          mission_type?: string
+          order_number?: number
+          reward_amount?: number
+          reward_currency?: string
+          target_value?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       notification_reads: {
         Row: {
           id: string
@@ -204,6 +331,72 @@ export type Database = {
           message?: string
           target_role?: Database["public"]["Enums"]["app_role"] | null
           title?: string
+        }
+        Relationships: []
+      }
+      pi_auth_sessions: {
+        Row: {
+          created_at: string
+          id: string
+          network: string
+          pi_uid: string
+          pi_username: string | null
+          scopes: string[]
+          updated_at: string
+          user_id: string | null
+          validated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          network?: string
+          pi_uid: string
+          pi_username?: string | null
+          scopes?: string[]
+          updated_at?: string
+          user_id?: string | null
+          validated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          network?: string
+          pi_uid?: string
+          pi_username?: string | null
+          scopes?: string[]
+          updated_at?: string
+          user_id?: string | null
+          validated_at?: string
+        }
+        Relationships: []
+      }
+      portfolio: {
+        Row: {
+          asset: string
+          avg_cost: number
+          created_at: string
+          id: string
+          quantity: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          asset: string
+          avg_cost?: number
+          created_at?: string
+          id?: string
+          quantity?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          asset?: string
+          avg_cost?: number
+          created_at?: string
+          id?: string
+          quantity?: number
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -310,6 +503,146 @@ export type Database = {
         }
         Relationships: []
       }
+      settings: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_public: boolean
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_public?: boolean
+          key: string
+          updated_at?: string
+          value?: Json
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_public?: boolean
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          amount_pi: number
+          created_at: string
+          direction: string
+          id: string
+          ledger_id: string | null
+          memo: string | null
+          metadata: Json
+          network: string
+          payment_id: string | null
+          product_id: string | null
+          status: string
+          txid: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount_pi?: number
+          created_at?: string
+          direction?: string
+          id?: string
+          ledger_id?: string | null
+          memo?: string | null
+          metadata?: Json
+          network?: string
+          payment_id?: string | null
+          product_id?: string | null
+          status?: string
+          txid?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount_pi?: number
+          created_at?: string
+          direction?: string
+          id?: string
+          ledger_id?: string | null
+          memo?: string | null
+          metadata?: Json
+          network?: string
+          payment_id?: string | null
+          product_id?: string | null
+          status?: string
+          txid?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_ledger_id_fkey"
+            columns: ["ledger_id"]
+            isOneToOne: false
+            referencedRelation: "ledger"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_missions: {
+        Row: {
+          claimed_at: string | null
+          completed_at: string | null
+          created_at: string
+          id: string
+          ledger_id: string | null
+          mission_id: string
+          progress: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          claimed_at?: string | null
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          ledger_id?: string | null
+          mission_id: string
+          progress?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          claimed_at?: string | null
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          ledger_id?: string | null
+          mission_id?: string
+          progress?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_missions_ledger_id_fkey"
+            columns: ["ledger_id"]
+            isOneToOne: false
+            referencedRelation: "ledger"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_missions_mission_id_fkey"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "missions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -392,7 +725,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "user" | "merchant" | "admin"
+      app_role: "user" | "merchant" | "admin" | "moderator"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -520,7 +853,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["user", "merchant", "admin"],
+      app_role: ["user", "merchant", "admin", "moderator"],
     },
   },
 } as const

@@ -57,6 +57,16 @@ export const Route = createFileRoute("/api/public/pi/approve")({
           });
           await PiPlatform.approvePayment(paymentId);
           PurchaseStore.update(paymentId, { status: "approved" });
+          const { recordPiPayment } = await import("@/lib/pi-db.server");
+          await recordPiPayment({
+            paymentId,
+            piUid: userUid,
+            productId,
+            amountPi: product.amount,
+            memo: product.memo,
+            metadata: product.metadata,
+            status: "approved",
+          });
           return Response.json({ ok: true, paymentId, status: "approved" });
         } catch (err) {
           const status = err instanceof PiPlatformError ? err.status : 500;

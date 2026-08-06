@@ -43,6 +43,14 @@ export const Route = createFileRoute("/api/public/pi/incomplete")({
               txid,
               rewardGranted: true,
             });
+            const { settlePiPayment } = await import("@/lib/pi-db.server");
+            await settlePiPayment({
+              paymentId,
+              txid,
+              status: "completed",
+              idpointsReward: product?.reward.idpoints,
+              productId: record.productId,
+            });
           }
           return Response.json({ ok: true, paymentId, txid, status: "completed" });
         } catch (err) {

@@ -44,6 +44,8 @@ export const Route = createFileRoute("/api/auth/pi")({
           if (!user?.uid || !user?.username) {
             return Response.json({ ok: false, error: "Invalid Pi user payload" }, { status: 401 });
           }
+          const { recordPiAuthSession } = await import("@/lib/pi-db.server");
+          await recordPiAuthSession({ piUid: user.uid, piUsername: user.username });
           return Response.json({
             ok: true,
             user: { uid: user.uid, username: user.username },
