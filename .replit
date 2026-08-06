@@ -37,3 +37,8 @@ externalPort = 5000
 [[ports]]
 localPort = 8080
 externalPort = 80
+
+[deployment]
+deploymentTarget = "autoscale"
+run = ["bun", "run", "start"]
+build = ["sh", "-c", "bun install && bun run build"]
