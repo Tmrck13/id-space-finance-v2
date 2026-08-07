@@ -282,3 +282,107 @@ export const adminCreateBanner = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+/* ---------------- Admin: backend configuration & reconciliation ---------------- */
+
+export const adminGetBackendConfig = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context.supabase);
+    const { describeSecrets } = await import("@/lib/app-secrets.server");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const [secrets, runs, openPayments, recentEvents] = await Promise.all([
+      describeSecrets(),
+      supabaseAdmin
+        .from("reconciliation_runs")
+        .select("*")
+        .order("started_at", { ascending: false })
+        .limit(10),
+      supabaseAdmin
+        .from("transactions")
+        .select("*", { count: "exact", head: true })
+        .in("status", ["created", "approved", "pending"]),
+      supabaseAdmin
+        .from("pi_payment_events")
+        .select("id, payment_id, event, status, source, created_at")
+        .order("created_at", { ascending: false })
+        .limit(15),
+    ]);
+
+    return {
+      secrets,
+      runs: runs.data ?? [],
+      openPayments: openPayments.count ?? 0,
+      events: recentEvents.data ?? [],
+      network: String(process.env["PI_SANDBOX"] ?? "true").toLowerCase() === "true" ? "testnet" : "mainnet",
+    };
+  });
+
+export const adminSaveSecret = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) =>
+    z
+      .object({
+        key: z.enum(["PI_NETWORK_API_KEY", "PI_VALIDATION_KEY"]),
+        value: z.string().min(16).max(512),
+      })
+      .parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.supabase);
+    const { setServerSecret } = await import("@/lib/app-secrets.server");
+    const { masked } = await setServerSecret(data.key, data.value, context.userId);
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    await supabaseAdmin.from("admin_logs").insert({
+      admin_id: context.userId,
+      activity: `secret:update:${data.key}`,
+      metadata: { key: data.key, masked },
+    });
+    return { ok: true, masked };
+  });
+
+export const adminDeleteSecret = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) =>
+    z.object({ key: z.enum(["PI_NETWORK_API_KEY", "PI_VALIDATION_KEY"]) }).parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.supabase);
+    const { deleteServerSecret } = await import("@/lib/app-secrets.server");
+    await deleteServerSecret(data.key);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    await supabaseAdmin.from("admin_logs").insert({
+      admin_id: context.userId,
+      activity: `secret:delete:${data.key}`,
+      metadata: { key: data.key },
+    });
+    return { ok: true };
+  });
+
+export const adminRunReconciliation = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context.supabase);
+    const { reconcilePiPayments } = await import("@/lib/pi-reconcile.server");
+    const result = await reconcilePiPayments("admin");
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    await supabaseAdmin.from("admin_logs").insert({
+      admin_id: context.userId,
+      activity: "reconciliation:run",
+      metadata: {
+        scanned: result.scanned,
+        updated: result.updated,
+        settled: result.settled,
+        failed: result.failed,
+      },
+    });
+    return {
+      scanned: result.scanned,
+      updated: result.updated,
+      settled: result.settled,
+      failed: result.failed,
+    };
+  });
