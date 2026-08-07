@@ -193,9 +193,13 @@ export function PiAuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = useCallback(() => {
     clearSession();
+    void import("@/integrations/supabase/client")
+      .then(({ supabase }) => supabase.auth.signOut())
+      .catch(() => { /* ignore */ });
     setStatus("unauthenticated"); setError(null);
     toast("Signed out");
   }, [clearSession]);
+
 
   // Bootstrap: restore session and auto-authenticate on load.
   useEffect(() => {
