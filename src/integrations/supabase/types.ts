@@ -38,6 +38,45 @@ export type Database = {
         }
         Relationships: []
       }
+      app_secrets: {
+        Row: {
+          auth_tag: string
+          ciphertext: string
+          created_at: string
+          hint: string | null
+          id: string
+          iv: string
+          key: string
+          updated_at: string
+          updated_by: string | null
+          version: number
+        }
+        Insert: {
+          auth_tag: string
+          ciphertext: string
+          created_at?: string
+          hint?: string | null
+          id?: string
+          iv: string
+          key: string
+          updated_at?: string
+          updated_by?: string | null
+          version?: number
+        }
+        Update: {
+          auth_tag?: string
+          ciphertext?: string
+          created_at?: string
+          hint?: string | null
+          id?: string
+          iv?: string
+          key?: string
+          updated_at?: string
+          updated_by?: string | null
+          version?: number
+        }
+        Relationships: []
+      }
       banners: {
         Row: {
           created_at: string
@@ -370,6 +409,50 @@ export type Database = {
         }
         Relationships: []
       }
+      pi_payment_events: {
+        Row: {
+          created_at: string
+          detail: Json
+          event: string
+          id: string
+          payment_id: string
+          source: string
+          status: string | null
+          transaction_id: string | null
+          txid: string | null
+        }
+        Insert: {
+          created_at?: string
+          detail?: Json
+          event: string
+          id?: string
+          payment_id: string
+          source?: string
+          status?: string | null
+          transaction_id?: string | null
+          txid?: string | null
+        }
+        Update: {
+          created_at?: string
+          detail?: Json
+          event?: string
+          id?: string
+          payment_id?: string
+          source?: string
+          status?: string | null
+          transaction_id?: string | null
+          txid?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pi_payment_events_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       portfolio: {
         Row: {
           asset: string
@@ -440,6 +523,42 @@ export type Database = {
             referencedColumns: ["level"]
           },
         ]
+      }
+      reconciliation_runs: {
+        Row: {
+          detail: Json
+          failed: number
+          finished_at: string | null
+          id: string
+          scanned: number
+          settled: number
+          started_at: string
+          trigger_source: string
+          updated: number
+        }
+        Insert: {
+          detail?: Json
+          failed?: number
+          finished_at?: string | null
+          id?: string
+          scanned?: number
+          settled?: number
+          started_at?: string
+          trigger_source?: string
+          updated?: number
+        }
+        Update: {
+          detail?: Json
+          failed?: number
+          finished_at?: string | null
+          id?: string
+          scanned?: number
+          settled?: number
+          started_at?: string
+          trigger_source?: string
+          updated?: number
+        }
+        Relationships: []
       }
       rewards: {
         Row: {
@@ -536,15 +655,19 @@ export type Database = {
       transactions: {
         Row: {
           amount_pi: number
+          attempts: number
           created_at: string
           direction: string
           id: string
+          last_error: string | null
           ledger_id: string | null
           memo: string | null
           metadata: Json
           network: string
           payment_id: string | null
           product_id: string | null
+          reconciled_at: string | null
+          settled_at: string | null
           status: string
           txid: string | null
           updated_at: string
@@ -552,15 +675,19 @@ export type Database = {
         }
         Insert: {
           amount_pi?: number
+          attempts?: number
           created_at?: string
           direction?: string
           id?: string
+          last_error?: string | null
           ledger_id?: string | null
           memo?: string | null
           metadata?: Json
           network?: string
           payment_id?: string | null
           product_id?: string | null
+          reconciled_at?: string | null
+          settled_at?: string | null
           status?: string
           txid?: string | null
           updated_at?: string
@@ -568,15 +695,19 @@ export type Database = {
         }
         Update: {
           amount_pi?: number
+          attempts?: number
           created_at?: string
           direction?: string
           id?: string
+          last_error?: string | null
           ledger_id?: string | null
           memo?: string | null
           metadata?: Json
           network?: string
           payment_id?: string | null
           product_id?: string | null
+          reconciled_at?: string | null
+          settled_at?: string | null
           status?: string
           txid?: string | null
           updated_at?: string
@@ -591,6 +722,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_entitlements: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          kind: string
+          product_id: string
+          quantity: number
+          source_payment_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          kind?: string
+          product_id: string
+          quantity?: number
+          source_payment_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          kind?: string
+          product_id?: string
+          quantity?: number
+          source_payment_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       user_missions: {
         Row: {
