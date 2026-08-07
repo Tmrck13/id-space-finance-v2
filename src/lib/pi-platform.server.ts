@@ -21,8 +21,9 @@ export class PiPlatformError extends Error {
   }
 }
 
-function getApiKey(): string {
-  const key = process.env.PI_NETWORK_API_KEY;
+async function getApiKey(): Promise<string> {
+  const { getServerSecret } = await import("./app-secrets.server");
+  const key = await getServerSecret("PI_NETWORK_API_KEY");
   if (!key) {
     throw new PiPlatformError(
       "PI_NETWORK_API_KEY is not configured on the server.",
@@ -33,7 +34,8 @@ function getApiKey(): string {
 }
 
 async function piFetch(path: string, init: RequestInit = {}): Promise<unknown> {
-  const key = getApiKey();
+  const key = await getApiKey();
+
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 15_000);
   try {
@@ -102,7 +104,9 @@ export const PiPlatform = {
   async cancelPayment(paymentId: string): Promise<PiPaymentDTO> {
     return (await piFetch(`/v2/payments/${paymentId}/cancel`, { method: "POST" })) as PiPaymentDTO;
   },
-  isConfigured(): boolean {
-    return !!process.env.PI_NETWORK_API_KEY;
+  async isConfigured(): Promise<boolean> {
+    const { getServerSecret } = await import("./app-secrets.server");
+    return !!(await getServerSecret("PI_NETWORK_API_KEY"));
   },
+
 };

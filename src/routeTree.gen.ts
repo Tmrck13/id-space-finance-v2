@@ -26,6 +26,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiPiConfigRouteImport } from './routes/api/pi-config'
+import { Route as AuthenticatedAdminConfigRouteImport } from './routes/_authenticated/admin-config'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
@@ -36,6 +37,7 @@ import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as ApiPublicPiStatusRouteImport } from './routes/api/public/pi/status'
 import { Route as ApiPublicPiRewardsRouteImport } from './routes/api/public/pi/rewards'
+import { Route as ApiPublicPiReconcileRouteImport } from './routes/api/public/pi/reconcile'
 import { Route as ApiPublicPiIncompleteRouteImport } from './routes/api/public/pi/incomplete'
 import { Route as ApiPublicPiCompleteRouteImport } from './routes/api/public/pi/complete'
 import { Route as ApiPublicPiApproveRouteImport } from './routes/api/public/pi/approve'
@@ -124,6 +126,12 @@ const ApiPiConfigRoute = ApiPiConfigRouteImport.update({
   path: '/api/pi-config',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminConfigRoute =
+  AuthenticatedAdminConfigRouteImport.update({
+    id: '/admin-config',
+    path: '/admin-config',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -177,6 +185,11 @@ const ApiPublicPiRewardsRoute = ApiPublicPiRewardsRouteImport.update({
   path: '/api/public/pi/rewards',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicPiReconcileRoute = ApiPublicPiReconcileRouteImport.update({
+  id: '/api/public/pi/reconcile',
+  path: '/api/public/pi/reconcile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicPiIncompleteRoute = ApiPublicPiIncompleteRouteImport.update({
   id: '/api/public/pi/incomplete',
   path: '/api/public/pi/incomplete',
@@ -212,6 +225,7 @@ export interface FileRoutesByFullPath {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/admin-config': typeof AuthenticatedAdminConfigRoute
   '/api/pi-config': typeof ApiPiConfigRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -221,6 +235,7 @@ export interface FileRoutesByFullPath {
   '/api/public/pi/approve': typeof ApiPublicPiApproveRoute
   '/api/public/pi/complete': typeof ApiPublicPiCompleteRoute
   '/api/public/pi/incomplete': typeof ApiPublicPiIncompleteRoute
+  '/api/public/pi/reconcile': typeof ApiPublicPiReconcileRoute
   '/api/public/pi/rewards': typeof ApiPublicPiRewardsRoute
   '/api/public/pi/status': typeof ApiPublicPiStatusRoute
 }
@@ -243,6 +258,7 @@ export interface FileRoutesByTo {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/admin-config': typeof AuthenticatedAdminConfigRoute
   '/api/pi-config': typeof ApiPiConfigRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -252,6 +268,7 @@ export interface FileRoutesByTo {
   '/api/public/pi/approve': typeof ApiPublicPiApproveRoute
   '/api/public/pi/complete': typeof ApiPublicPiCompleteRoute
   '/api/public/pi/incomplete': typeof ApiPublicPiIncompleteRoute
+  '/api/public/pi/reconcile': typeof ApiPublicPiReconcileRoute
   '/api/public/pi/rewards': typeof ApiPublicPiRewardsRoute
   '/api/public/pi/status': typeof ApiPublicPiStatusRoute
 }
@@ -276,6 +293,7 @@ export interface FileRoutesById {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/admin-config': typeof AuthenticatedAdminConfigRoute
   '/api/pi-config': typeof ApiPiConfigRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -285,6 +303,7 @@ export interface FileRoutesById {
   '/api/public/pi/approve': typeof ApiPublicPiApproveRoute
   '/api/public/pi/complete': typeof ApiPublicPiCompleteRoute
   '/api/public/pi/incomplete': typeof ApiPublicPiIncompleteRoute
+  '/api/public/pi/reconcile': typeof ApiPublicPiReconcileRoute
   '/api/public/pi/rewards': typeof ApiPublicPiRewardsRoute
   '/api/public/pi/status': typeof ApiPublicPiStatusRoute
 }
@@ -309,6 +328,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/admin'
+    | '/admin-config'
     | '/api/pi-config'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
@@ -318,6 +338,7 @@ export interface FileRouteTypes {
     | '/api/public/pi/approve'
     | '/api/public/pi/complete'
     | '/api/public/pi/incomplete'
+    | '/api/public/pi/reconcile'
     | '/api/public/pi/rewards'
     | '/api/public/pi/status'
   fileRoutesByTo: FileRoutesByTo
@@ -340,6 +361,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/admin'
+    | '/admin-config'
     | '/api/pi-config'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
@@ -349,6 +371,7 @@ export interface FileRouteTypes {
     | '/api/public/pi/approve'
     | '/api/public/pi/complete'
     | '/api/public/pi/incomplete'
+    | '/api/public/pi/reconcile'
     | '/api/public/pi/rewards'
     | '/api/public/pi/status'
   id:
@@ -372,6 +395,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/admin'
+    | '/_authenticated/admin-config'
     | '/api/pi-config'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
@@ -381,6 +405,7 @@ export interface FileRouteTypes {
     | '/api/public/pi/approve'
     | '/api/public/pi/complete'
     | '/api/public/pi/incomplete'
+    | '/api/public/pi/reconcile'
     | '/api/public/pi/rewards'
     | '/api/public/pi/status'
   fileRoutesById: FileRoutesById
@@ -413,6 +438,7 @@ export interface RootRouteChildren {
   ApiPublicPiApproveRoute: typeof ApiPublicPiApproveRoute
   ApiPublicPiCompleteRoute: typeof ApiPublicPiCompleteRoute
   ApiPublicPiIncompleteRoute: typeof ApiPublicPiIncompleteRoute
+  ApiPublicPiReconcileRoute: typeof ApiPublicPiReconcileRoute
   ApiPublicPiRewardsRoute: typeof ApiPublicPiRewardsRoute
   ApiPublicPiStatusRoute: typeof ApiPublicPiStatusRoute
 }
@@ -538,6 +564,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPiConfigRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin-config': {
+      id: '/_authenticated/admin-config'
+      path: '/admin-config'
+      fullPath: '/admin-config'
+      preLoaderRoute: typeof AuthenticatedAdminConfigRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -608,6 +641,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicPiRewardsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/pi/reconcile': {
+      id: '/api/public/pi/reconcile'
+      path: '/api/public/pi/reconcile'
+      fullPath: '/api/public/pi/reconcile'
+      preLoaderRoute: typeof ApiPublicPiReconcileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/pi/incomplete': {
       id: '/api/public/pi/incomplete'
       path: '/api/public/pi/incomplete'
@@ -634,10 +674,12 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedAdminConfigRoute: typeof AuthenticatedAdminConfigRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedAdminConfigRoute: AuthenticatedAdminConfigRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -672,6 +714,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicPiApproveRoute: ApiPublicPiApproveRoute,
   ApiPublicPiCompleteRoute: ApiPublicPiCompleteRoute,
   ApiPublicPiIncompleteRoute: ApiPublicPiIncompleteRoute,
+  ApiPublicPiReconcileRoute: ApiPublicPiReconcileRoute,
   ApiPublicPiRewardsRoute: ApiPublicPiRewardsRoute,
   ApiPublicPiStatusRoute: ApiPublicPiStatusRoute,
 }

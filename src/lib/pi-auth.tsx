@@ -95,13 +95,28 @@ async function validateOnBackend(accessToken: string): Promise<PiUser> {
     body: JSON.stringify({ accessToken }),
   });
   const data = (await res.json().catch(() => ({}))) as {
-    ok?: boolean; user?: PiUser; error?: string;
+    ok?: boolean;
+    user?: PiUser;
+    roles?: string[];
+    session?: { access_token: string; refresh_token: string } | null;
+    error?: string;
   };
   if (!res.ok || !data.ok || !data.user) {
     throw new Error(data.error || `Backend validation failed (${res.status})`);
   }
+  // Adopt the linked Supabase session so RLS + roles apply on every request.
+  if (data.session?.access_token && data.session?.refresh_token) {
+    try {
+      const { supabase } = await import("@/integrations/supabase/client");
+      await supabase.auth.setSession({
+        access_token: data.session.access_token,
+        refresh_token: data.session.refresh_token,
+      });
+    } catch { /* degraded: Pi identity only */ }
+  }
   return data.user;
 }
+
 
 export function PiAuthProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<PiSessionStatus>("idle");
@@ -178,9 +193,13 @@ export function PiAuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = useCallback(() => {
     clearSession();
+    void import("@/integrations/supabase/client")
+      .then(({ supabase }) => supabase.auth.signOut())
+      .catch(() => { /* ignore */ });
     setStatus("unauthenticated"); setError(null);
     toast("Signed out");
   }, [clearSession]);
+
 
   // Bootstrap: restore session and auto-authenticate on load.
   useEffect(() => {
