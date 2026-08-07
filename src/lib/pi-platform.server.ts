@@ -104,7 +104,9 @@ export const PiPlatform = {
   async cancelPayment(paymentId: string): Promise<PiPaymentDTO> {
     return (await piFetch(`/v2/payments/${paymentId}/cancel`, { method: "POST" })) as PiPaymentDTO;
   },
-  isConfigured(): boolean {
-    return !!process.env.PI_NETWORK_API_KEY;
+  async isConfigured(): Promise<boolean> {
+    const { getServerSecret } = await import("./app-secrets.server");
+    return !!(await getServerSecret("PI_NETWORK_API_KEY"));
   },
+
 };
