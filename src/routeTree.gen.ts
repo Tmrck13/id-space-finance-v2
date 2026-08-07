@@ -36,6 +36,7 @@ import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as ApiPublicPiStatusRouteImport } from './routes/api/public/pi/status'
 import { Route as ApiPublicPiRewardsRouteImport } from './routes/api/public/pi/rewards'
+import { Route as ApiPublicPiReconcileRouteImport } from './routes/api/public/pi/reconcile'
 import { Route as ApiPublicPiIncompleteRouteImport } from './routes/api/public/pi/incomplete'
 import { Route as ApiPublicPiCompleteRouteImport } from './routes/api/public/pi/complete'
 import { Route as ApiPublicPiApproveRouteImport } from './routes/api/public/pi/approve'
@@ -177,6 +178,11 @@ const ApiPublicPiRewardsRoute = ApiPublicPiRewardsRouteImport.update({
   path: '/api/public/pi/rewards',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicPiReconcileRoute = ApiPublicPiReconcileRouteImport.update({
+  id: '/api/public/pi/reconcile',
+  path: '/api/public/pi/reconcile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicPiIncompleteRoute = ApiPublicPiIncompleteRouteImport.update({
   id: '/api/public/pi/incomplete',
   path: '/api/public/pi/incomplete',
@@ -221,6 +227,7 @@ export interface FileRoutesByFullPath {
   '/api/public/pi/approve': typeof ApiPublicPiApproveRoute
   '/api/public/pi/complete': typeof ApiPublicPiCompleteRoute
   '/api/public/pi/incomplete': typeof ApiPublicPiIncompleteRoute
+  '/api/public/pi/reconcile': typeof ApiPublicPiReconcileRoute
   '/api/public/pi/rewards': typeof ApiPublicPiRewardsRoute
   '/api/public/pi/status': typeof ApiPublicPiStatusRoute
 }
@@ -252,6 +259,7 @@ export interface FileRoutesByTo {
   '/api/public/pi/approve': typeof ApiPublicPiApproveRoute
   '/api/public/pi/complete': typeof ApiPublicPiCompleteRoute
   '/api/public/pi/incomplete': typeof ApiPublicPiIncompleteRoute
+  '/api/public/pi/reconcile': typeof ApiPublicPiReconcileRoute
   '/api/public/pi/rewards': typeof ApiPublicPiRewardsRoute
   '/api/public/pi/status': typeof ApiPublicPiStatusRoute
 }
@@ -285,6 +293,7 @@ export interface FileRoutesById {
   '/api/public/pi/approve': typeof ApiPublicPiApproveRoute
   '/api/public/pi/complete': typeof ApiPublicPiCompleteRoute
   '/api/public/pi/incomplete': typeof ApiPublicPiIncompleteRoute
+  '/api/public/pi/reconcile': typeof ApiPublicPiReconcileRoute
   '/api/public/pi/rewards': typeof ApiPublicPiRewardsRoute
   '/api/public/pi/status': typeof ApiPublicPiStatusRoute
 }
@@ -318,6 +327,7 @@ export interface FileRouteTypes {
     | '/api/public/pi/approve'
     | '/api/public/pi/complete'
     | '/api/public/pi/incomplete'
+    | '/api/public/pi/reconcile'
     | '/api/public/pi/rewards'
     | '/api/public/pi/status'
   fileRoutesByTo: FileRoutesByTo
@@ -349,6 +359,7 @@ export interface FileRouteTypes {
     | '/api/public/pi/approve'
     | '/api/public/pi/complete'
     | '/api/public/pi/incomplete'
+    | '/api/public/pi/reconcile'
     | '/api/public/pi/rewards'
     | '/api/public/pi/status'
   id:
@@ -381,6 +392,7 @@ export interface FileRouteTypes {
     | '/api/public/pi/approve'
     | '/api/public/pi/complete'
     | '/api/public/pi/incomplete'
+    | '/api/public/pi/reconcile'
     | '/api/public/pi/rewards'
     | '/api/public/pi/status'
   fileRoutesById: FileRoutesById
@@ -413,6 +425,7 @@ export interface RootRouteChildren {
   ApiPublicPiApproveRoute: typeof ApiPublicPiApproveRoute
   ApiPublicPiCompleteRoute: typeof ApiPublicPiCompleteRoute
   ApiPublicPiIncompleteRoute: typeof ApiPublicPiIncompleteRoute
+  ApiPublicPiReconcileRoute: typeof ApiPublicPiReconcileRoute
   ApiPublicPiRewardsRoute: typeof ApiPublicPiRewardsRoute
   ApiPublicPiStatusRoute: typeof ApiPublicPiStatusRoute
 }
@@ -608,6 +621,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicPiRewardsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/pi/reconcile': {
+      id: '/api/public/pi/reconcile'
+      path: '/api/public/pi/reconcile'
+      fullPath: '/api/public/pi/reconcile'
+      preLoaderRoute: typeof ApiPublicPiReconcileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/pi/incomplete': {
       id: '/api/public/pi/incomplete'
       path: '/api/public/pi/incomplete'
@@ -672,6 +692,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicPiApproveRoute: ApiPublicPiApproveRoute,
   ApiPublicPiCompleteRoute: ApiPublicPiCompleteRoute,
   ApiPublicPiIncompleteRoute: ApiPublicPiIncompleteRoute,
+  ApiPublicPiReconcileRoute: ApiPublicPiReconcileRoute,
   ApiPublicPiRewardsRoute: ApiPublicPiRewardsRoute,
   ApiPublicPiStatusRoute: ApiPublicPiStatusRoute,
 }
