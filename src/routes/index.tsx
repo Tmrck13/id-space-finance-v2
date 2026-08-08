@@ -11,6 +11,7 @@ import {
 import heroMosque from "@/assets/hero-mosque.jpg";
 import { AppShell, GoldRing, HexIcon, SectionTitle } from "@/components/idspace/shell";
 import { PiConverter } from "@/components/idspace/pi-converter";
+import { AnnouncementRail } from "@/components/idspace/announcements";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { useSettings, useTap } from "@/lib/app-settings";
@@ -406,6 +407,7 @@ function Index() {
   return (
     <AppShell active="Home">
       <Hero/>
+      <AnnouncementRail/>
       <LivePiMarket/>
       <PiConverter/>
       <QuickStats/>
