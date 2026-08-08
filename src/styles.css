@@ -67,6 +67,12 @@
 .anim-float { animation: floatY 5s ease-in-out infinite; }
 .anim-twinkle { animation: twinkle 3s ease-in-out infinite; }
 .anim-pulse-glow { animation: pulseGlow 3.5s ease-in-out infinite; }
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.anim-marquee { display: inline-block; animation: marquee 28s linear infinite; }
+
 .gold-shimmer {
   background: linear-gradient(90deg, #C7A650 0%, #FFD76A 25%, #FFF3B0 50%, #FFD76A 75%, #C7A650 100%);
   background-size: 200% 100%;
