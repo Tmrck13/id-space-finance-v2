@@ -81,32 +81,41 @@ export type Database = {
         Row: {
           created_at: string
           description: string | null
+          ends_at: string | null
           id: string
           image: string | null
           is_active: boolean
           link: string | null
           order_number: number
+          starts_at: string | null
           title: string | null
+          updated_at: string
         }
         Insert: {
           created_at?: string
           description?: string | null
+          ends_at?: string | null
           id?: string
           image?: string | null
           is_active?: boolean
           link?: string | null
           order_number?: number
+          starts_at?: string | null
           title?: string | null
+          updated_at?: string
         }
         Update: {
           created_at?: string
           description?: string | null
+          ends_at?: string | null
           id?: string
           image?: string | null
           is_active?: boolean
           link?: string | null
           order_number?: number
+          starts_at?: string | null
           title?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -349,27 +358,42 @@ export type Database = {
       notifications: {
         Row: {
           created_at: string
+          expires_at: string | null
           id: string
           is_active: boolean
+          lang: string
           message: string
+          priority: number
+          published_at: string
           target_role: Database["public"]["Enums"]["app_role"] | null
           title: string
+          updated_at: string
         }
         Insert: {
           created_at?: string
+          expires_at?: string | null
           id?: string
           is_active?: boolean
+          lang?: string
           message: string
+          priority?: number
+          published_at?: string
           target_role?: Database["public"]["Enums"]["app_role"] | null
           title: string
+          updated_at?: string
         }
         Update: {
           created_at?: string
+          expires_at?: string | null
           id?: string
           is_active?: boolean
+          lang?: string
           message?: string
+          priority?: number
+          published_at?: string
           target_role?: Database["public"]["Enums"]["app_role"] | null
           title?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -601,24 +625,39 @@ export type Database = {
       running_text: {
         Row: {
           created_at: string
+          ends_at: string | null
           id: string
           is_active: boolean
+          lang: string
           message: string
           order_number: number
+          priority: number
+          starts_at: string | null
+          updated_at: string
         }
         Insert: {
           created_at?: string
+          ends_at?: string | null
           id?: string
           is_active?: boolean
+          lang?: string
           message: string
           order_number?: number
+          priority?: number
+          starts_at?: string | null
+          updated_at?: string
         }
         Update: {
           created_at?: string
+          ends_at?: string | null
           id?: string
           is_active?: boolean
+          lang?: string
           message?: string
           order_number?: number
+          priority?: number
+          starts_at?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
