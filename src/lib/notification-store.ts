@@ -1,10 +1,15 @@
 /**
- * Notification store — Admin/System-only notifications.
- * Badge only shows when unread > 0. Mark-as-read updates instantly.
+ * Notification store — real, admin-published notifications only.
+ *
+ * Items come from the database (active + inside their publish window) via
+ * `getPublicAnnouncements`; only the per-device "read" state lives in
+ * localStorage. There is intentionally NO seed data: when there are zero
+ * active notifications the badge shows nothing.
  */
 import { useSyncExternalStore, useCallback } from "react";
 
-const K_NOTIF = "idspace.notifications.v1";
+const K_READ = "idspace.notifications.read.v2";
+const K_LOCAL = "idspace.notifications.local.v2";
 
 export type Notification = {
   id: string;
@@ -16,7 +21,9 @@ export type Notification = {
   type: "info" | "success" | "warning";
 };
 
-type NotifState = { items: Notification[] };
+export type RemoteNotification = { id: string; title: string; message: string; at: number };
+
+type NotifState = { remote: Notification[]; local: Notification[]; readIds: string[] };
 
 function read<T>(key: string, fb: T): T {
   if (typeof window === "undefined") return fb;
@@ -27,48 +34,31 @@ function write(key: string, v: unknown) {
   try { localStorage.setItem(key, JSON.stringify(v)); } catch { /* ignore */ }
 }
 
-// Seed some initial admin notifications if store is empty
-const SEED: Notification[] = [
-  {
-    id: "sys-001",
-    title: "Welcome to ID·SPACE Finance",
-    body: "Thank you for joining the First Islamic Web3 Finance Super App. Complete your Daily Check-In to earn IDPoints!",
-    at: Date.now() - 3600000,
-    read: false,
-    from: "system",
-    type: "info",
-  },
-  {
-    id: "sys-002",
-    title: "IDPoints Staking Available",
-    body: "Earn 12% APR by staking your IDPoints. Go to the Staking page to start growing your balance.",
-    at: Date.now() - 7200000,
-    read: false,
-    from: "admin",
-    type: "success",
-  },
-];
-
-let STATE: NotifState = { items: [] };
+let STATE: NotifState = { remote: [], local: [], readIds: [] };
 let hydrated = false;
 const listeners = new Set<() => void>();
+let CACHE: Notification[] = [];
+
+function recompute() {
+  const readSet = new Set(STATE.readIds);
+  CACHE = [...STATE.remote, ...STATE.local]
+    .map((n) => ({ ...n, read: readSet.has(n.id) }))
+    .sort((a, b) => b.at - a.at);
+}
 
 function hydrate() {
   if (hydrated || typeof window === "undefined") return;
-  const stored = read<Notification[]>(K_NOTIF, []);
-  STATE = { items: stored.length > 0 ? stored : SEED };
-  if (stored.length === 0) write(K_NOTIF, SEED);
+  STATE = {
+    remote: STATE.remote,
+    local: read<Notification[]>(K_LOCAL, []),
+    readIds: read<string[]>(K_READ, []),
+  };
   hydrated = true;
-  window.addEventListener("storage", (e) => {
-    if (e.key === K_NOTIF) {
-      STATE = { items: read<Notification[]>(K_NOTIF, []) };
-      listeners.forEach((l) => l());
-    }
-  });
+  recompute();
 }
 
-function setState(patch: Partial<NotifState>) {
-  STATE = { ...STATE, ...patch };
+function emit() {
+  recompute();
   listeners.forEach((l) => l());
 }
 
@@ -78,28 +68,50 @@ function subscribe(cb: () => void) {
   return () => { listeners.delete(cb); };
 }
 
-export function useNotifications() {
-  const items = useSyncExternalStore(subscribe, () => STATE.items, () => STATE.items);
+/** Feed the store with the notifications published by admins. */
+export function setRemoteNotifications(items: RemoteNotification[]) {
+  const mapped: Notification[] = items.map((n) => ({
+    id: n.id,
+    title: n.title,
+    body: n.message,
+    at: n.at,
+    read: false,
+    from: "admin",
+    type: "info",
+  }));
+  const same =
+    mapped.length === STATE.remote.length &&
+    mapped.every((m, i) => STATE.remote[i]?.id === m.id);
+  if (same) return;
+  STATE = { ...STATE, remote: mapped };
+  emit();
+}
 
+export function useNotifications() {
+  const items = useSyncExternalStore(subscribe, () => CACHE, () => CACHE);
   const unreadCount = items.filter((n) => !n.read).length;
 
   const markRead = useCallback((id: string) => {
-    const next = STATE.items.map((n) => n.id === id ? { ...n, read: true } : n);
-    write(K_NOTIF, next);
-    setState({ items: next });
+    if (STATE.readIds.includes(id)) return;
+    const next = [...STATE.readIds, id];
+    write(K_READ, next);
+    STATE = { ...STATE, readIds: next };
+    emit();
   }, []);
 
   const markAllRead = useCallback(() => {
-    const next = STATE.items.map((n) => ({ ...n, read: true }));
-    write(K_NOTIF, next);
-    setState({ items: next });
+    const next = [...new Set([...STATE.readIds, ...CACHE.map((n) => n.id)])];
+    write(K_READ, next);
+    STATE = { ...STATE, readIds: next };
+    emit();
   }, []);
 
   const addNotification = useCallback((n: Omit<Notification, "id" | "at" | "read">) => {
     const item: Notification = { ...n, id: crypto.randomUUID(), at: Date.now(), read: false };
-    const next = [item, ...STATE.items].slice(0, 50);
-    write(K_NOTIF, next);
-    setState({ items: next });
+    const next = [item, ...STATE.local].slice(0, 50);
+    write(K_LOCAL, next);
+    STATE = { ...STATE, local: next };
+    emit();
   }, []);
 
   return { items, unreadCount, markRead, markAllRead, addNotification };

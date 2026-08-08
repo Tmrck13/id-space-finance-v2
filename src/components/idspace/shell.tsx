@@ -11,6 +11,7 @@ import { MenuDrawer, SettingsDialog } from "@/components/idspace/menu-drawer";
 import { useSettings, useTap } from "@/lib/app-settings";
 import { PiAuthWidget } from "@/components/idspace/pi-auth-widget";
 import { useNotifications } from "@/lib/notification-store";
+import { useAnnouncements } from "@/components/idspace/announcements";
 
 /* ---------- Living background (client-only stars to avoid SSR mismatch) ---------- */
 export function LivingBackground() {
@@ -320,6 +321,8 @@ function Footer() {
 export function AppShell({ active, children }: { active: string; children: ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  // Keeps the notification badge fed with real, admin-published notifications.
+  useAnnouncements();
   return (
     <div className="min-h-screen text-white font-sans" style={{ fontFamily: "Inter, system-ui" }}>
       <LivingBackground/>
