@@ -32,9 +32,11 @@ async function admin() {
   return supabaseAdmin;
 }
 
-async function logActivity(adminId: string, activity: string, metadata: Record<string, unknown> = {}) {
+type Meta = Record<string, string | number | boolean | null | undefined>;
+
+async function logActivity(adminId: string, activity: string, metadata: Meta = {}) {
   const db = await admin();
-  await db.from("admin_logs").insert({ admin_id: adminId, activity, metadata });
+  await db.from("admin_logs").insert({ admin_id: adminId, activity, metadata: metadata as never });
 }
 
 /* ---------------------------------------------------------------- bootstrap */
@@ -849,13 +851,12 @@ export const adminListLogs = createServerFn({ method: "GET" })
 
     /** Metadata is scrubbed: encrypted/secret values are never surfaced. */
     const SENSITIVE = /key|secret|token|password|credential|cipher|iv|auth_tag/i;
-    const scrub = (meta: unknown) => {
+    const scrub = (meta: unknown): Record<string, string> => {
       if (!meta || typeof meta !== "object") return {};
-      const out: Record<string, unknown> = {};
+      const out: Record<string, string> = {};
       for (const [k, v] of Object.entries(meta as Record<string, unknown>)) {
-        if (k === "key" || k === "masked") out[k] = v; // secret NAME + masked hint only
-        else if (SENSITIVE.test(k)) out[k] = "«redacted»";
-        else out[k] = typeof v === "object" ? JSON.stringify(v) : v;
+        if (SENSITIVE.test(k) && k !== "key" && k !== "masked") out[k] = "«redacted»";
+        else out[k] = typeof v === "object" && v !== null ? JSON.stringify(v) : String(v);
       }
       return out;
     };
